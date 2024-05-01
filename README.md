@@ -38,23 +38,22 @@ It is part of the larger Asynchronous Network Managment System (ANMS) managed fo
        `'(_ )_)(_)_)'
 
 
-This tool uses the JSON representation of an Application Data Model (ADM) to
+This tool uses the YANG representation of an Application Data Model (ADM) to
 generate code for various purposes. CAmp generates:
 
-- C code for usage in NASA ION (Interplanetary Overlay Network)
+- C code for usage in a C-implemented DTNMA agent
   - This generation can also carry over custom functions in existing C files for
     the ADM, if indicated appropriately in the existing code (see the
     Round-tripping Section). 
-- SQL code, also for usage in NASA ION
+- SQL code for usage by the ANMS manager
 - ACE input files, for usage with the ARI CBOR Encoder (ACE) Tool
 
-Additional generators may be added to account for use cases outside of ION/ACE.
 Please contact the developers for more information or suggestions. The
 Architecture Section also provides some explanation of the components of CAmp,
 and how to incorporate additional generators.
 
 **NOTE**
-CAmp largely assumes that the ADM JSON input can be trusted (i.e., CAmp does not
+CAmp largely assumes that the ADM YANG input can be trusted (i.e., CAmp does not
 go to great lengths to fully sanitize all strings found within the ADM). CAmp
 does properly escape necessary sequences found in the ADMs tested during
 development (e.g., apostrophes in object descriptions).
@@ -79,17 +78,18 @@ pip3 install .
 
 ### Basic Usage
 
-The camp tool takes a JSON representation of an ADM for a network protocol as
+The camp tool takes a YANG representation of an ADM for a network protocol as
 input and calls each of the included generators to generate files for the ADM.
 
-> The included `template.json` provides an example of how a JSON ADM should be
-> formatted. For more information on this data model, please consult the AMA
-> Application Data Model IETF draft.
+<!-- > The included `template.json` provides an example of how a JSON ADM should be
+> formatted. For more information on this data model, please consult the AMA 
+> Application Data Model IETF draft.-->
+>For information on how to format a YANG ADM, please consult the Application Management Model IETF draft.
 
-Given the JSON representation of the ADM, run camp with:
+Given the YANG representation of the ADM, run camp with:
 
 ```
-   camp <adm.json>
+   camp <adm.yang>
 ```
 
 ### Name Registry
@@ -170,7 +170,7 @@ and will create the directories listed above within <output_directory>.
 Custom Code and Round-tripping
 ------------------------------
 
-The `adm_<adm>_impl.c` and `adm_<adm>_impl.h` files generated for NASA ION
+The `adm_<adm>_impl.c` and `adm_<adm>_impl.h` files generated for the DTNMA agent
 contain functions whose bodies cannot be automatically generated with knowledge
 of the ADM alone. When generated, these fuctions are marked with tags similar to
 the following:
@@ -230,11 +230,11 @@ copied over to the correct area of the new file.
     - create_agent.py  - Generates agent file (C code) for usage in NASA ION
     - create_gen_h.py  - Generates the shared header file needed for NASA ION
     - create_impl_c.py - Generates the implementation file (C code) for usage in
-                         NASA ION
+                         DTNMA C agent
     - create_impl_h.py - Generates the header file for the implementation file
                          created by create_impl_c.py
-    - create_mgr_c.py  - Generates the manager file for usage in NASA ION
-    - create_mysql.py  - Generates an SQL file for usage with NASA ION stored
+    - create_mgr_c.py  - Generates the manager file for usage in DTNMA C agent
+    - create_mysql.py  - Generates an SQL file for usage with DTNMA C agent stored
                          procedures
     - lib/        - Library functions for generating commonly-used patterns and 
                     accessing portions of the ADM.
