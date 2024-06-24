@@ -1,26 +1,38 @@
 import camp
 import psycopg2
-
-# taken from https://www.postgresqltutorial.com/postgresql-python/connect/
-def connect():
-    try:
-        with psycopg2.connect(
-            host="localhost",
-            port=5432,
-            database="amp_core",
-            user="root",
-            password="root"
-        ) as conn:
-            print('Connected to the PostgreSQL server.')
-            return conn
-    except (psycopg2.DatabaseError, Exception) as error:
-        print(error)
+import unittest
 
 
-print("hello world")
+class TestSQL(unittest.TestCase):
+   
+    @classmethod
+    def setUpClass(self):
+        # connect to ANMS library
+        # params: https://gitlab.jhuapl.edu/anms/anms#amp-database-querying
+        self._conn = psycopg2.connect(
+                host="localhost",
+                port=5432,
+                database="amp_core",
+                user="root",
+                password="root"
+            )
+        self.cursor = self._conn.cursor()
 
+    @classmethod
+    def tearDownClass(self):
+        self.cursor.close()
+        self._conn.close()
 
-cursor = connect().cursor()
+    # TODO which files to use? how many files? 1 file = 1 test case?
+    #      using existing file for now...
+    def test_ADM_IETF_DTNMA_AGENT(self):
+        with open("amp-sql/Agent_Scripts/adm_ietf-dtnma-agent.sql", "r") as f:
+            self.cursor.execute(f.read())
 
-cursor.execute(open("amp-sql/Agent_Scripts/adm_ietf-dtnma-agent.sql", "r").read())
+        # TODO assert something?
 
+    # def test_ADM_AMP_AGENT(self):
+    #     with open("amp-sql/Agent_Scripts/adm_amp_agent.sql", "r") as f:
+    #         self.cursor.execute(f.read())
+
+    #     # TODO assert something?
