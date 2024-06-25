@@ -1,7 +1,8 @@
-import camp
 import psycopg2
 import unittest
 
+# from .util import TmpDir
+from camp.tools.camp import run
 
 class TestSQL(unittest.TestCase):
    
@@ -12,10 +13,10 @@ class TestSQL(unittest.TestCase):
         self._conn = psycopg2.connect(
                 host="localhost",
                 port=5432,
-                database="amp_core",
-                user="root",
+                # database="amp_core",
+                user="postgres",
                 password="root"
-            )
+        )
         self.cursor = self._conn.cursor()
 
     @classmethod
@@ -25,14 +26,8 @@ class TestSQL(unittest.TestCase):
 
     # TODO which files to use? how many files? 1 file = 1 test case?
     #      using existing file for now...
-    def test_ADM_IETF_DTNMA_AGENT(self):
-        with open("amp-sql/Agent_Scripts/adm_ietf-dtnma-agent.sql", "r") as f:
+    def test_ADM_AMP_AGENT(self):
+        with open("amp-sql/Agent_Scripts/adm_amp_agent.sql", "r") as f:
             self.cursor.execute(f.read())
 
         # TODO assert something?
-
-    # def test_ADM_AMP_AGENT(self):
-    #     with open("amp-sql/Agent_Scripts/adm_amp_agent.sql", "r") as f:
-    #         self.cursor.execute(f.read())
-
-    #     # TODO assert something?
