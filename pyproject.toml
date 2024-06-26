@@ -31,8 +31,7 @@ test = [
   "jinja2",
   "pytest",
   "pytest-cov",
-  "coverage",
-  "docker"
+  "coverage"
 ]
 pylint = [
   "pylint",
