@@ -20,4 +20,4 @@ shared/
 testresults.xml
 .coverage
 coverage.xml
-tests/adms/
+tests/unit_tests/adms/
