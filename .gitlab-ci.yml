@@ -129,7 +129,7 @@ integration-test:
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-docker
     - docker build -t amp-sql:1.0 ../amp-sql/
-    - docker run --name postgres -e POSTGRES_PASSWORD=root -p 5432:5423 -d amp-sql:1.0
+    - docker run --name postgres -e POSTGRES_PASSWORD=root -p docker:5432:5423 -d amp-sql:1.0
     - docker container ps -a
   script:
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_integration.py
