@@ -84,7 +84,7 @@ cache:
       docker-engine \
       podman \
       runc
-  pip3 install docker
+  pip3 install docker-ce docker-ce-cli containerd.io docker-buildx-plugin
   docker info
   docker login -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY
 
