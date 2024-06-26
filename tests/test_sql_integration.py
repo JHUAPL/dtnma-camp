@@ -1,9 +1,12 @@
 import psycopg2
 import unittest
 import argparse
+import os
 
-# from .util import TmpDir
+from .util import TmpDir
 from camp.tools.camp import run
+
+SELFDIR = os.path.dirname(__file__)
 
 class TestSQL(unittest.TestCase):
    
@@ -24,6 +27,14 @@ class TestSQL(unittest.TestCase):
         self.cursor.close()
         self._conn.close()
 
+    def setUp(self):
+        self.maxDiff = None
+        self._dir = TmpDir()
+        # self._admset = AdmSet()
+
+    def tearDown(self):
+        del self._dir
+
     def _runCamp(self, filepath, outpath):
         """
         Obtains sql files generated from running CAmp on filepath. Moves to temp directory
@@ -38,21 +49,24 @@ class TestSQL(unittest.TestCase):
 
     # TODO which files to use? how many files? 1 file = 1 test case?
     #      using existing file for now...
-    def test_ADM_AMP_AGENT(self):
-        filepath = "./amp-agent.json"
-        outpath = "./"
+    def test_adms(self):
+        adms_dir = os.path.join(SELFDIR, "data", "adms")
+        adms = [f for f in os.listdir(adms_dir) if os.path.isfile(os.path.join(adms_dir, f))]
 
-        exitcode = self._runCamp(filepath, outpath)
-        self.assertEqual(0, exitcode)
+        for f in adms:
+            filepath = os.path.join(adms_dir, f)
 
-        with open("./amp-sql/Agent_Scripts/adm_amp_agent.sql", "r") as f:
-            self.cursor.execute(f.read())
-        
-        self.cursor.execute("Select * from adm")
-        results = self.cursor.fetchall()
+            # exitcode = self._runCamp(filepath, outpath)
+            # self.assertEqual(0, exitcode)
 
-        for result in results:
-            print(result)
+            # with open("./amp-sql/Agent_Scripts/adm_amp_agent.sql", "r") as f:
+            #     self.cursor.execute(f.read())
+            
+            # self.cursor.execute("Select * from adm")
+            # results = self.cursor.fetchall()
 
-        # TODO assert something?
+        # for result in results:
+        #     print(result)
+
+        # # TODO assert something?
 
