@@ -108,6 +108,15 @@ unit-test:
         coverage_format: cobertura
         path: coverage.xml
 
+integration-test:
+  stage: test
+  needs:
+    - build
+  allow_failure: true
+  script:
+    - ls ../
+    - ls ../anms-adms
+
 pylint:
   stage: test
   needs:
