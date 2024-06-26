@@ -68,7 +68,7 @@ class BaseTest(unittest.TestCase):
         del self._dir
 
     def _get_adm(self, file_name):
-        ''' Read an ADM file from the 'tests/unit_tests/data' directory.
+        ''' Read an ADM file from the 'tests/data' directory.
         '''
         admfile = os.path.join(SELFDIR, 'data', file_name)
         LOGGER.info("Loading %s ... ", admfile)
