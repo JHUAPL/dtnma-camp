@@ -145,7 +145,7 @@ integration-test:
     - *prep-wheel-ace
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
-    - *prep-install-docker
+    # - *prep-install-docker
     - docker build -t amp-sql:1.0 ../amp-sql/
     - docker run --name database -e POSTGRES_PASSWORD=root -p 127.0.0.1:5432:5432/tcp -d amp-sql:1.0
   script:
