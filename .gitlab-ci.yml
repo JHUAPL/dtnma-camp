@@ -68,9 +68,27 @@ cache:
     apt-get update && apt-get install -y git python3 python3-venv python3-pip python3-wheel
     pip3 config --global set global.index-url https://artifactory.jhuapl.edu/artifactory/api/pypi/python-remote/simple
     pip3 install pip-tools
+
 .prep-wheel-ace: &prep-wheel-ace |
     pip3 wheel git+https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/dtn/ace.git -w ./wheels --no-deps
     git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/dtn/adms.git tests/adms
+
+.prep-install-docker: &prep-install-docker |
+  dnf remove -y docker \
+      docker-client \
+      docker-client-latest \
+      docker-common \
+      docker-latest \
+      docker-latest-logrotate \
+      docker-logrotate \
+      docker-engine \
+      podman \
+      runc
+  dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+  dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin
+  docker info
+  docker login -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY
+
 
 build:
   stage: build
@@ -112,28 +130,28 @@ integration-test:
   stage: test
   needs:
     - build
-  image: ../amp-sql/Dockerfile
-  services:
-    - postgres
-  variables:
-    POSTGRES_DB: $POSTGRES_DB
-    POSTGRES_USER: $POSTGRES_USER
-    POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-    # POSTGRES_HOST_AUTH_METHOD: trust
+  # image: https://gitlab.jhuapl.edu/anms/anms/-/blob/apl-ep2-updates/amp-sql/Dockerfile?ref_type=heads
+  # services:
+  #   - postgres
+  # variables:
+  #   POSTGRES_DB: $POSTGRES_DB
+  #   POSTGRES_USER: $POSTGRES_USER
+  #   POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+  #   # POSTGRES_HOST_AUTH_METHOD: trust
   allow_failure: true
   before_script:
-    - *prep-repos
-    - *prep-install-ca
-    - *prep-install-pip
-    - *prep-wheel-ace
-    - pip-compile --find-links ./wheels --extra test pyproject.toml
-    - pip3 install --find-links ./wheels -r requirements.txt
-    # - pip3 install docker
+    # - *prep-repos
+    # - *prep-install-ca
+    # - *prep-install-pip
+    # - *prep-wheel-ace
+    # - pip-compile --find-links ./wheels --extra test pyproject.toml
+    # - pip3 install --find-links ./wheels -r requirements.txt
+    - *prep-install-docker
     # - docker build -t amp-sql:1.0 ../amp-sql/
     # - docker run --name database -e POSTGRES_PASSWORD=root -p 127.0.0.1:5432:5432/tcp -d amp-sql:1.0
   script:
     - ls .
-    # - docker container ps -q
+    - docker container ps -q
   after_script:
 
 pylint:
