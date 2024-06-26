@@ -74,7 +74,7 @@ cache:
     git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/dtn/adms.git tests/adms
 
 .prep-install-docker: &prep-install-docker |
-  dnf remove -y docker \
+  pip uninstall docker \
       docker-client \
       docker-client-latest \
       docker-common \
@@ -84,8 +84,7 @@ cache:
       docker-engine \
       podman \
       runc
-  dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
-  dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin
+  pip3 install docker
   docker info
   docker login -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY
 
@@ -147,8 +146,8 @@ integration-test:
     # - pip-compile --find-links ./wheels --extra test pyproject.toml
     # - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-docker
-    # - docker build -t amp-sql:1.0 ../amp-sql/
-    # - docker run --name database -e POSTGRES_PASSWORD=root -p 127.0.0.1:5432:5432/tcp -d amp-sql:1.0
+    - docker build -t amp-sql:1.0 ../amp-sql/
+    - docker run --name database -e POSTGRES_PASSWORD=root -p 127.0.0.1:5432:5432/tcp -d amp-sql:1.0
   script:
     - ls .
     - docker container ps -q
