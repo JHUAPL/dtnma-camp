@@ -100,6 +100,7 @@ unit-test:
     - *prep-install-ca
     - *prep-install-pip
     - *prep-wheel-ace
+    - apt install postgresql
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
   script:
