@@ -103,16 +103,16 @@ unit-test:
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
   script:
-    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/unit_tests
+    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=unit_tests/testresults.xml --cov=camp tests/unit_tests
     - coverage xml
   coverage: /TOTAL\s+\d+\s+\d+\s+(\d+(?:.\d+)?)%/
   artifacts:
     when: always
     reports:
-      junit: testresults.xml
+      junit: unit_tests/testresults.xml
       coverage_report:
         coverage_format: cobertura
-        path: coverage.xml
+        path: unit_tests/coverage.xml
 
 integration-test:
   stage: test
