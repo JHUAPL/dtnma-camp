@@ -103,7 +103,7 @@ unit-test:
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
   script:
-    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests
+    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_unit.py
     - coverage xml
   coverage: /TOTAL\s+\d+\s+\d+\s+(\d+(?:.\d+)?)%/
   artifacts:
