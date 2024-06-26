@@ -1,5 +1,6 @@
 import psycopg2
 import unittest
+import argparse
 
 # from .util import TmpDir
 from camp.tools.camp import run
@@ -13,7 +14,6 @@ class TestSQL(unittest.TestCase):
         self._conn = psycopg2.connect(
                 host="localhost",
                 port=5432,
-                # database="amp_core",
                 user="postgres",
                 password="root"
         )
@@ -24,10 +24,35 @@ class TestSQL(unittest.TestCase):
         self.cursor.close()
         self._conn.close()
 
+    def _runCamp(self, filepath, outpath):
+        """
+        Obtains sql files generated from running CAmp on filepath. Moves to temp directory
+        """
+        args = argparse.Namespace()
+        args.admfile = filepath
+        args.out = outpath
+        args.only_sql = True
+        args.only_ch = False
+        return run(args)
+
+
     # TODO which files to use? how many files? 1 file = 1 test case?
     #      using existing file for now...
     def test_ADM_AMP_AGENT(self):
-        with open("amp-sql/Agent_Scripts/adm_amp_agent.sql", "r") as f:
+        filepath = "./amp-agent.json"
+        outpath = "./"
+
+        exitcode = self._runCamp(filepath, outpath)
+        self.assertEqual(0, exitcode)
+
+        with open("./amp-sql/Agent_Scripts/adm_amp_agent.sql", "r") as f:
             self.cursor.execute(f.read())
+        
+        self.cursor.execute("Select * from adm")
+        results = self.cursor.fetchall()
+
+        for result in results:
+            print(result)
 
         # TODO assert something?
+
