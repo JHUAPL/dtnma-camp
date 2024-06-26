@@ -124,7 +124,7 @@ integration-test:
     - *prep-install-ca
     - *prep-install-pip
     - *prep-wheel-ace
-    - apt-get install postgresql
+    - apt-get install -y postgresql
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-docker
