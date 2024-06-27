@@ -2,6 +2,7 @@ import psycopg2
 import unittest
 import argparse
 import os
+import ace
 
 from .util import TmpDir
 from camp.tools.camp import run
@@ -14,7 +15,7 @@ class TestSQL(unittest.TestCase):
     def setUpClass(self):
         # connect to ANMS library
         self._conn = psycopg2.connect(
-                host="172.17.0.4", # might need to change? or pass through somehow?
+                host="172.17.0.3", # might need to change? or pass through somehow?
                 port=5432,
                 user="postgres",
                 password="root"
@@ -51,6 +52,7 @@ class TestSQL(unittest.TestCase):
     def test_adms(self):
         adms_dir = os.path.join(SELFDIR, "adms")
         adms = [f for f in os.listdir(adms_dir) if os.path.isfile(os.path.join(adms_dir, f))]
+        admset = ace.AdmSet()
 
         for f in adms:
             filepath = os.path.join(adms_dir, f)
@@ -60,11 +62,11 @@ class TestSQL(unittest.TestCase):
             if not os.path.exists(outfolder):
                 os.mkdir(outfolder)
 
-
             exitcode = self._runCamp(filepath, outfolder)
             self.assertEqual(0, exitcode)
 
-            sql_file = os.path.join(outfolder, "amp-sql", "Agent_Scripts", f'adm_{os.path.splitext(f)[0]}.sql')
+            norm_name = admset.load_from_file(filepath).norm_name
+            sql_file = os.path.join(outfolder, "amp-sql", "Agent_Scripts", f'adm_{norm_name}.sql')
             print(sql_file)
             with open(sql_file, "r") as f:
                 self.cursor.execute(f.read())
@@ -76,4 +78,3 @@ class TestSQL(unittest.TestCase):
                 print(result)
 
         # # TODO assert something?
-
