@@ -132,6 +132,7 @@ integration-test:
     - docker run --name postgres -e POSTGRES_PASSWORD=root -p 127.0.0.1:5432:5432/tcp -d amp-sql:1.0
     - sleep 10 # make sure docker is up
     - docker container ps -a
+    - nc -zv 127.0.0.1 5432
   script:
     - cat /etc/hosts
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_integration.py
