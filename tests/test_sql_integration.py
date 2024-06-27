@@ -50,6 +50,12 @@ class TestSQL(unittest.TestCase):
     # TODO which files to use? how many files? 1 file = 1 test case?
     #      using existing file for now...
     def test_adms(self):
+        """
+        Integration test for all the ADMs
+        ADMs should be placed in tests/adms
+        Resulting sql files will be placed in tests/adms/amp-sql/Agent_Scripts
+        """
+
         adms_dir = os.path.join(SELFDIR, "adms")
         adms = [f for f in os.listdir(adms_dir) if os.path.isfile(os.path.join(adms_dir, f))]
         admset = ace.AdmSet()
@@ -58,15 +64,11 @@ class TestSQL(unittest.TestCase):
             filepath = os.path.join(adms_dir, f)
             print(filepath)
 
-            outfolder = os.path.join(adms_dir, "results")
-            if not os.path.exists(outfolder):
-                os.mkdir(outfolder)
-
-            exitcode = self._runCamp(filepath, outfolder)
+            exitcode = self._runCamp(filepath, adms_dir)
             self.assertEqual(0, exitcode)
 
             norm_name = admset.load_from_file(filepath).norm_name
-            sql_file = os.path.join(outfolder, "amp-sql", "Agent_Scripts", f'adm_{norm_name}.sql')
+            sql_file = os.path.join(adms_dir, "amp-sql", "Agent_Scripts", f'adm_{norm_name}.sql')
             print(sql_file)
             with open(sql_file, "r") as f:
                 self.cursor.execute(f.read())
