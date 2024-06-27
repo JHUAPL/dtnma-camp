@@ -136,6 +136,7 @@ integration-test:
     - sleep 15 # make sure docker is up
     - docker container ps -a
     - nc -zv 127.0.0.1 5432 #debg
+    - systemctl status postgresql.service #debug
   script:
     - cat /etc/hosts #debug
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_integration.py
