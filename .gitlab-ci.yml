@@ -135,6 +135,7 @@ integration-test:
     - docker run --name anms-lib -e POSTGRES_PASSWORD=root -e POSTGRES_USER=postgres -p 127.0.0.1:5432:5432/tcp -d amp-sql:1.0
     - sleep 15 # make sure docker is up
     - docker container ps -a
+    - docker inspect anms-lib # debug
     - cat /etc/hosts #debug
     - nc -zv 172.17.0.2 5432 #debug
     - nc -zv 127.0.0.1 5432 #debug
