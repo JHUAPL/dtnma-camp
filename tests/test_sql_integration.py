@@ -13,9 +13,8 @@ class TestSQL(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         # connect to ANMS library
-        # params: https://gitlab.jhuapl.edu/anms/anms#amp-database-querying
         self._conn = psycopg2.connect(
-                host="172.17.0.4",
+                host="172.17.0.3", # might need to change? or pass through somehow?
                 port=5432,
                 user="postgres",
                 password="root"
@@ -55,18 +54,26 @@ class TestSQL(unittest.TestCase):
 
         for f in adms:
             filepath = os.path.join(adms_dir, f)
+            print(filepath)
 
-            # exitcode = self._runCamp(filepath, outpath)
-            # self.assertEqual(0, exitcode)
+            outfolder = os.path.join(adms_dir, "results")
+            if not os.path.exists(outfolder):
+                os.mkdir(outfolder)
 
-            # with open("./amp-sql/Agent_Scripts/adm_amp_agent.sql", "r") as f:
-            #     self.cursor.execute(f.read())
+
+            exitcode = self._runCamp(filepath, outfolder)
+            self.assertEqual(0, exitcode)
+
+            sql_file = os.path.join(outfolder, "amp-sql", "Agent_Scripts", f'adm_{os.path.splitext(f)[0]}.sql')
+            print(sql_file)
+            with open(sql_file, "r") as f:
+                self.cursor.execute(f.read())
             
-            # self.cursor.execute("Select * from adm")
-            # results = self.cursor.fetchall()
+            self.cursor.execute("Select * from adm")
+            results = self.cursor.fetchall()
 
-        # for result in results:
-        #     print(result)
+            for result in results:
+                print(result)
 
         # # TODO assert something?
 
