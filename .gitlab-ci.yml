@@ -125,6 +125,7 @@ integration-test:
     - *prep-install-pip
     - *prep-wheel-ace
     - apt-get install -y postgresql
+    - service postgresql start # make sure to start postgresql???
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-docker
@@ -132,7 +133,7 @@ integration-test:
     - docker run --name postgres -e POSTGRES_PASSWORD=root -p 127.0.0.1:5432:5432/tcp -d amp-sql:1.0
     - sleep 10 # make sure docker is up
     - docker container ps -a
-    - apt-get install netcat
+    - apt-get install -y netcat
     - nc -zv 127.0.0.1 5432
   script:
     - cat /etc/hosts
