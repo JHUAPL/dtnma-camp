@@ -135,6 +135,7 @@ integration-test:
   script:
     - ls tests/adms
     - cd tests/adms
+    - git remote update
     - git fetch
     - git branch
     - git checkout apl-ep2-updates
