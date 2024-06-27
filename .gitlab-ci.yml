@@ -136,10 +136,11 @@ integration-test:
     - sleep 15 # make sure docker is up
     - docker container ps -a
     - cat /etc/hosts #debug
+    - nc -zv 172.17.0.2 5432 #debug
+
     # - nc -zv 127.0.0.1 5432 #debug
     # - apt-get install -y ping #debug
     # - ping -c 1 127.0.0.1 #debug
-    - ss -nlt | grep 5432
   script:
     - cat /etc/hosts #debug
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_integration.py
