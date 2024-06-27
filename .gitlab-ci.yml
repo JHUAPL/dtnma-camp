@@ -131,7 +131,7 @@ integration-test:
     - *prep-install-docker
     - docker build -t amp-sql:1.0 ../amp-sql/
     - docker run --name anms-lib -e POSTGRES_PASSWORD=root -d amp-sql:1.0
-    # - sleep 15 # make sure docker is up
+    - sleep 15 # make sure docker container is up
     - docker container ps -a
     # - docker inspect anms-lib # debug
     # - cat /etc/hosts #debug
