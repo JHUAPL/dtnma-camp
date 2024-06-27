@@ -131,11 +131,11 @@ integration-test:
     - *prep-install-docker
     - docker build -t amp-sql:1.0 ../amp-sql/
     - docker run --name anms-lib -e POSTGRES_PASSWORD=root -d amp-sql:1.0
-    - sleep 15 # make sure docker is up
+    # - sleep 15 # make sure docker is up
     - docker container ps -a
-    - docker inspect anms-lib # debug
-    - cat /etc/hosts #debug
-    - nc -zv 172.17.0.4 5432 #debug
+    # - docker inspect anms-lib # debug
+    # - cat /etc/hosts #debug
+    # - nc -zv 172.17.0.4 5432 #debug
   script:
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_integration.py -s
     - coverage xml
