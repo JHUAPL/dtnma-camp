@@ -124,18 +124,14 @@ integration-test:
     - *prep-install-ca
     - *prep-install-pip
     - *prep-wheel-ace
-    - apt-get install -y netcat #debug
-    - apt-get install -y postgresql
+    - apt-get install -y postgresql # need for psycogp2 requirement
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
-    - *prep-install-docker
+    # - *prep-install-docker
     - docker build -t amp-sql:1.0 ../amp-sql/
     - docker run --name anms-lib -e POSTGRES_PASSWORD=root -d amp-sql:1.0
     - sleep 15 # make sure docker container is up
     - docker container ps -a
-    # - docker inspect anms-lib # debug
-    # - cat /etc/hosts #debug
-    # - nc -zv 172.17.0.4 5432 #debug
   script:
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_integration.py -s
     - coverage xml
