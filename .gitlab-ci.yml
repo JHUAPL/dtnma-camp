@@ -135,6 +135,7 @@ integration-test:
   script:
     - ls tests/adms
     - cd tests/adms
+    - git fetch
     - git checkout apl-ep2-updates
     - cd ../..
     - ls tests/adms
