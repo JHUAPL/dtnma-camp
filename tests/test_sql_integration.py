@@ -14,7 +14,7 @@ class TestSQL(unittest.TestCase):
     def setUpClass(self):
         # connect to ANMS library
         self._conn = psycopg2.connect(
-                host="172.17.0.3", # might need to change? or pass through somehow?
+                host="172.17.0.4", # might need to change? or pass through somehow?
                 port=5432,
                 user="postgres",
                 password="root"
