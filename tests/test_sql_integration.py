@@ -15,7 +15,7 @@ class TestSQL(unittest.TestCase):
         # connect to ANMS library
         # params: https://gitlab.jhuapl.edu/anms/anms#amp-database-querying
         self._conn = psycopg2.connect(
-                host="127.0.0.1",
+                host="172.17.0.4",
                 port=5432,
                 user="postgres",
                 password="root"
