@@ -126,23 +126,17 @@ integration-test:
     - *prep-wheel-ace
     - apt-get install -y netcat #debug
     - apt-get install -y postgresql
-    # - service postgresql start # make sure to start postgresql???
-    # - nc -zv 127.0.0.1 5432 #debg
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-docker
     - docker build -t amp-sql:1.0 ../amp-sql/
-    - docker run --name anms-lib -e POSTGRES_PASSWORD=root -e POSTGRES_USER=postgres -p 127.0.0.1:5432:5432/tcp -d amp-sql:1.0
+    - docker run --name anms-lib -e POSTGRES_PASSWORD=root -d amp-sql:1.0
     - sleep 15 # make sure docker is up
     - docker container ps -a
     - docker inspect anms-lib # debug
     - cat /etc/hosts #debug
     - nc -zv 172.17.0.4 5432 #debug
-    # - nc -zv 127.0.0.1 5432 #debug
-    # - apt-get install -y ping #debug
-    # - ping -c 1 127.0.0.1 #debug
   script:
-    - cat /etc/hosts #debug
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_integration.py
     - coverage xml
   after_script:
