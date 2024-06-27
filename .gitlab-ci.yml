@@ -133,6 +133,7 @@ integration-test:
     - sleep 15 # make sure docker is up
     - docker container ps -a
   script:
+    - cat /etc/hosts
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_integration.py
     - coverage xml
   after_script:
