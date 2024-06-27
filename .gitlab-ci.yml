@@ -133,12 +133,12 @@ integration-test:
     - sleep 15 # make sure docker container is up
     - docker container ps -a
   script:
-    # - ls tests/adms
-    # - cd tests/adms
-    # - git fetch
-    # - git checkout apl-ep2-updates
-    # - cd ../..
-    # - ls tests/adms
+    - ls tests/adms
+    - cd tests/adms
+    - git fetch
+    - git checkout apl-ep2-updates
+    - cd ../..
+    - ls tests/adms
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_integration.py -s
     - coverage xml
   after_script:
