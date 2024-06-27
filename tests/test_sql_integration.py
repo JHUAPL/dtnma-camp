@@ -49,7 +49,7 @@ class TestSQL(unittest.TestCase):
     # TODO which files to use? how many files? 1 file = 1 test case?
     #      using existing file for now...
     def test_adms(self):
-        adms_dir = os.path.join(SELFDIR, "data", "adms")
+        adms_dir = os.path.join(SELFDIR, "adms")
         adms = [f for f in os.listdir(adms_dir) if os.path.isfile(os.path.join(adms_dir, f))]
 
         for f in adms:
