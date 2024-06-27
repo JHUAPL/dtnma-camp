@@ -134,6 +134,9 @@ integration-test:
     - docker container ps -a
   script:
     - ls tests/adms
+    - cd tests/adms
+    - git checkout apl-ep2-updates
+    - cd ../..
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_integration.py -s
     - coverage xml
   after_script:
