@@ -135,10 +135,12 @@ integration-test:
   script:
     - ls tests/adms
     - cd tests/adms
+    - git branch -avv
     - git remote update
-    - git fetch
-    - git branch
-    - git checkout --track origin/apl-ep2-updates
+    - git branch -avv
+    - git fetch origin apl-ep2-updates
+    - git branch -avv
+    - git checkout apl-ep2-updates
     - cd ../..
     - ls tests/adms
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_integration.py -s
