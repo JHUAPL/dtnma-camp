@@ -52,11 +52,11 @@ class TestSQL(unittest.TestCase):
     def test_adms(self):
         """
         Integration test for all the ADMs
-        ADMs should be placed in tests/adms
-        Resulting sql files will be placed in tests/adms/amp-sql/Agent_Scripts
+        ADMs should be placed in tests/anms-adms
+        Resulting sql files will be placed in tests/anms-adms/amp-sql/Agent_Scripts
         """
 
-        adms_dir = os.path.join(SELFDIR, "adms")
+        adms_dir = os.path.join(SELFDIR, "anms-adms")
         adms = [f for f in os.listdir(adms_dir) if os.path.isfile(os.path.join(adms_dir, f))]
         admset = ace.AdmSet()
 
@@ -64,7 +64,7 @@ class TestSQL(unittest.TestCase):
             filepath = os.path.join(adms_dir, f)
             print(filepath)
 
-            try:
+            try: # TODO do NOT leave this as try catch
                 exitcode = self._runCamp(filepath, adms_dir)
                 self.assertEqual(0, exitcode)
 
