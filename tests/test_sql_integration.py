@@ -11,7 +11,8 @@ from camp.tools.camp import run
 SELFDIR = os.path.dirname(__file__)
 ADMS_DIR = os.path.join(SELFDIR, "adms")
 
-@pytest.fixture()
+# @pytest.fixture()
+@pytest.fixture(scope="session", autouse=True)
 def setup():
     # setup
     # connect to ANMS library
