@@ -138,12 +138,9 @@ integration-test:
   script:
     # TODO: get anms-adms version of the adms
     # - ls tests/anms-adms
-    # - cd tests/anms-adms
-    # - git checkout apl-ep2-updates
-    # - ls
-    # - cd ../..
+    # - cd tests/anms-adms && git checkout apl-ep2-updates && cd ../..
+    # - ls tests/anms-adms
     - anms_ip=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' anms-lib)
-    - echo $anms_ip
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_integration.py --ip=$anms_ip
     - coverage xml
   after_script:
