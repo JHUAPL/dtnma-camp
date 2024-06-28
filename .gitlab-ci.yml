@@ -134,13 +134,13 @@ integration-test:
     - docker container ps -a
   script:
     - ls tests/adms
-    # - cd tests/adms
-    # - git remote update
-    # - git fetch
-    # - git branch
-    # - git checkout apl-ep2-updates
-    # - cd ../..
-    # - ls tests/adms
+    - cd tests/adms
+    - git remote update
+    - git fetch
+    - git branch
+    - git checkout --track origin/apl-ep2-updates
+    - cd ../..
+    - ls tests/adms
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_integration.py -s
     - coverage xml
   after_script:
