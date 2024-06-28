@@ -14,7 +14,7 @@ def setup(ip):
     # setup
     # connect to ANMS library
     conn = psycopg2.connect(
-            host=ip, # might need to change? or pass through somehow?
+            host=ip, # TODO might need to change? or pass through somehow?
             port=5432,
             user="postgres",
             password="root"
@@ -51,10 +51,9 @@ def test_adms(setup, adm):
     cursor = setup[0]
     admset = setup[1]
 
-    # make sure file is .json or .yaml
-    # and not the index.json file
+    # make sure file is .json or .yang and not the index.json file
     ext = os.path.splitext(adm)[1]
-    if (ext != ".json" and ext != ".yaml") or adm == "index.json":
+    if (ext != ".json" and ext != ".yang") or adm == "index.json":
         pytest.skip("file skipped: {f} is not an adm file".format(f=adm))
 
     # run camp
