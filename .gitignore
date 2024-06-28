@@ -21,4 +21,3 @@ testresults.xml
 .coverage
 coverage.xml
 tests/adms/
-tests/anms-adms/
