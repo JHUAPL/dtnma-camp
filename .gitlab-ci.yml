@@ -147,7 +147,8 @@ integration-test:
     # - git checkout apl-ep2-updates
     # - cd ../..
     # - ls tests/anms-adms
-    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_integration.py -s
+    - anms_ip = $(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' anms-lib)
+    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/test_*_integration.py -s --ip=$anms_ip
     - coverage xml
   after_script:
     - docker stop anms-lib

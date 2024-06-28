@@ -1,30 +1,28 @@
 import psycopg2
-import unittest
 import argparse
 import os
 import ace
 import pytest
 
-from .util import TmpDir
 from camp.tools.camp import run
 
 SELFDIR = os.path.dirname(__file__)
 ADMS_DIR = os.path.join(SELFDIR, "adms")
 
-# @pytest.fixture()
 @pytest.fixture(scope="session", autouse=True)
-def setup():
+def setup(ip):
     # setup
     # connect to ANMS library
     conn = psycopg2.connect(
-            host="172.17.0.4", # might need to change? or pass through somehow?
+            host=ip, # might need to change? or pass through somehow?
             port=5432,
             user="postgres",
             password="root"
     )
     cursor = conn.cursor()
+    
+    # reusable objects that the tests will need
     admset = ace.AdmSet()
-
     yield cursor, admset
 
     # teardown
@@ -44,8 +42,6 @@ def _runCamp(filepath, outpath):
     return run(args)
 
 
-# TODO which files to use? how many files? 1 file = 1 test case?
-#      using existing file for now...
 @pytest.mark.parametrize("adm", [f for f in os.listdir(ADMS_DIR) if os.path.isfile(os.path.join(ADMS_DIR, f))])
 def test_adms(setup, adm):
     """
