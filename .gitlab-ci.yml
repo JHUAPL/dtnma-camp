@@ -126,16 +126,17 @@ integration-test:
     - *prep-install-ca
     - *prep-install-pip
     - *prep-wheel-ace
-    - *prep-install-adms
+    # - *prep-install-adms # TODO re-enable
     - apt-get install -y postgresql # need for psycogp2 requirement
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-docker
-    - docker build -t amp-sql:1.0 ../amp-sql/ # TODO not sure which branch this is on
+    - docker build -t amp-sql:1.0 ../amp-sql/ # TODO prob on main branch... is this okay?
     - docker run --name anms-lib -e POSTGRES_PASSWORD=root -d amp-sql:1.0
     - sleep 15 # make sure docker container is up
     - docker container ps -a
   script:
+    # TODO: get anms-adms version of the adms
     # - ls tests/anms-adms
     # - cd tests/anms-adms
     # - git branch -avv
