@@ -6,8 +6,7 @@ import pytest
 
 from camp.tools.camp import run
 
-SELFDIR = os.path.dirname(__file__)
-ADMS_DIR = os.path.join(SELFDIR, "adms")
+ADMS_DIR = os.path.join("tests", "adms")
 
 @pytest.fixture(scope="session", autouse=True)
 def setup(ip):
