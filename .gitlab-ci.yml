@@ -74,8 +74,23 @@ cache:
     git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/dtn/adms.git tests/adms
 
 .prep-install-docker: &prep-install-docker |
-  curl -fsSL https://get.docker.com -o get-docker.sh
-  sh get-docker.sh
+  apt-get remove -y docker \
+      docker-client \
+      docker-client-latest \
+      docker-common \
+      docker-latest \
+      docker-latest-logrotate \
+      docker-logrotate \
+      docker-engine \
+      podman \
+      runc
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    tee /etc/apt/sources.list.d/docker.list > /dev/null
+  apt-get update
+  apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  docker info
 
 .prep-install-adms: &prep-install-adms |
   git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/anms-adms.git tests/anms-adms
@@ -141,7 +156,7 @@ integration-test:
     # - cd tests/anms-adms && git checkout apl-ep2-updates && cd ../..
     # - ls tests/anms-adms
     - anms_ip=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' anms-lib)
-    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/ --ip="anms-lib"
+    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/ --ip=$anms_ip
     - coverage xml
   after_script:
     - docker stop anms-lib
