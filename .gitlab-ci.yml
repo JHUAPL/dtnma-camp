@@ -74,16 +74,6 @@ cache:
     git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/dtn/adms.git tests/adms
 
 .prep-install-docker: &prep-install-docker |
-  apt-get remove -y docker \
-      docker-client \
-      docker-client-latest \
-      docker-common \
-      docker-latest \
-      docker-latest-logrotate \
-      docker-logrotate \
-      docker-engine \
-      podman \
-      runc
   echo \
     "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
     $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
