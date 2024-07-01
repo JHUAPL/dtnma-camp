@@ -21,3 +21,4 @@ testresults.xml
 .coverage
 coverage.xml
 tests/adms/
+tests/integration_test/adms
