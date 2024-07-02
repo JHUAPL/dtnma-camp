@@ -148,6 +148,7 @@ integration-test:
     - docker network ls
     - cat /etc/hostname
     - cat /etc/hosts
+    - echo host.docker.internal
   script:
     # TODO: get anms-adms version of the adms
     # - ls tests/anms-adms
