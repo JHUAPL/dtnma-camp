@@ -147,7 +147,7 @@ integration-test:
     - docker container ps -a
     - docker network ls
     - cat /etc/hostname
-    - cat/etc/hosts
+    - cat /etc/hosts
   script:
     # TODO: get anms-adms version of the adms
     # - ls tests/anms-adms
