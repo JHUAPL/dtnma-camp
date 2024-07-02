@@ -50,7 +50,7 @@ def test_adms(setup, adm):
 
     # run camp
     filepath = os.path.join(ADMS_DIR, adm)
-    exitcode = runCamp(filepath, ADMS_DIR)
+    exitcode = _run_camp(filepath, ADMS_DIR)
     assert 0 == exitcode
 
     # execute sql
@@ -60,7 +60,7 @@ def test_adms(setup, adm):
         cursor.execute(f.read())
 
 
-def runCamp(filepath, outpath):
+def _run_camp(filepath, outpath):
     """
     Generates sql files by running CAmp on filepath. Resulting sql files are stored
     in outpath
