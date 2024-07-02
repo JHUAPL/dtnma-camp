@@ -145,6 +145,9 @@ integration-test:
     - docker run --name anms-lib --hostname anms_net -e POSTGRES_PASSWORD=root -d amp-sql:1.0
     - sleep 15 # make sure docker container is up
     - docker container ps -a
+    - docker network ls
+    - cat /etc/hostname
+    - cat/etc/hosts
   script:
     # TODO: get anms-adms version of the adms
     # - ls tests/anms-adms
