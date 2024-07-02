@@ -154,8 +154,8 @@ integration-test:
     # - ls tests/anms-adms
     # - cd tests/anms-adms && git checkout apl-ep2-updates && cd ../..
     # - ls tests/anms-adms
-    - anms_ip=$(docker exec anms-lib hostname -i)
-    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/ --ip=$anms_ip
+    - export ANMS_IP_ADDR=$(docker exec anms-lib hostname -i)
+    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/
     - coverage xml
   after_script:
     - docker stop anms-lib

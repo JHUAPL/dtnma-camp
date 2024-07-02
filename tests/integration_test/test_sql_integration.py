@@ -9,18 +9,16 @@ from camp.tools.camp import run
 ADMS_DIR = os.path.join("tests", "adms")
 
 @pytest.fixture(scope="session", autouse=True)
-def setup(ip):
+def setup():
     """
     Connects to the ADMS library session. Cleans up connections once done.
-    @param ip: IP address of the library connection. Can be determined through
-      port-mapping when creating the library, or checking the docker container
-      (docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container_name>)
+    IP Address of the library session should be stored in env var $ANMS_IP_ADDR
     @yields tuple of (connection object, AdmSet())
     """
 
     # setup: connect to ANMS library
     conn = psycopg2.connect(
-            host=ip, # TODO might need to change? or pass through somehow?
+            host=os.environ["ANMS_IP_ADDR"],
             port=5432,
             user="postgres",
             password="root"
