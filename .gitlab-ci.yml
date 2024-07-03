@@ -90,6 +90,9 @@ cache:
 .prep-install-adms: &prep-install-adms |
   git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/anms-adms.git tests/anms-adms
 
+.prep-install-dtnma-tools: &prep-install-dtnma-tools |
+  git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/dtnma-tools.git tests
+
 build:
   stage: build
   needs: []
@@ -168,7 +171,11 @@ integration-test-c:
     - *prep-install-ca
     - *prep-install-pip
     - *prep-wheel-ace
-    # TODO use different version of ADMs?
+    - pip-compile --find-links ./wheels --extra test pyproject.toml
+    - pip3 install --find-links ./wheels -r requirements.txt
+    # - *prep-install-dtnma-tools
+    # - cd tests/dtnma-tools
+    # - 
   script:
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_c_integration.py
     - coverage xml
