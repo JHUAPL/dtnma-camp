@@ -126,7 +126,7 @@ unit-test:
         coverage_format: cobertura
         path: coverage.xml
 
-integration-test:
+integration-test-sql:
   stage: test
   needs:
     - build
@@ -152,11 +152,27 @@ integration-test:
     # - cd tests/anms-adms && git checkout apl-ep2-updates && cd ../..
     # - ls tests/anms-adms
     - export ANMS_IP_ADDR=$(docker exec anms-lib hostname -i)
-    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/
+    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_sql_integration.py
     - coverage xml
   after_script:
     - docker stop anms-lib
     - docker rm anms-lib
+
+integration-test-c:
+  stage: test
+  needs:
+    - build
+  allow_failure: true
+  before_script:
+    - *prep-repos
+    - *prep-install-ca
+    - *prep-install-pip
+    - *prep-wheel-ace
+    - # TODO use different version of ADMs?
+    - 
+  script:
+    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_c_integration.py
+    - coverage xml
 
 pylint:
   stage: test
