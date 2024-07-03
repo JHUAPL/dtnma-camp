@@ -1,10 +1,9 @@
 import psycopg2
-import argparse
 import os
 import ace
 import pytest
 
-from camp.tools.camp import run
+from .util import _run_camp
 
 ADMS_DIR = os.path.join("tests", "adms")
 
@@ -50,7 +49,7 @@ def test_adms(setup, adm):
 
     # run camp
     filepath = os.path.join(ADMS_DIR, adm)
-    exitcode = _run_camp(filepath, ADMS_DIR)
+    exitcode = _run_camp(filepath, ADMS_DIR, True, False)
     assert 0 == exitcode
 
     # execute sql
@@ -58,16 +57,3 @@ def test_adms(setup, adm):
     sql_file = os.path.join(ADMS_DIR, "amp-sql", "Agent_Scripts", 'adm_{name}.sql'.format(name=norm_name))
     with open(sql_file, "r") as f:
         cursor.execute(f.read())
-
-
-def _run_camp(filepath, outpath):
-    """
-    Generates sql files by running CAmp on filepath. Resulting sql files are stored
-    in outpath
-    """
-    args = argparse.Namespace()
-    args.admfile = filepath
-    args.out = outpath
-    args.only_sql = True
-    args.only_ch = False
-    return run(args)
