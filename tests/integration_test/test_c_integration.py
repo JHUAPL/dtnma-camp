@@ -37,6 +37,8 @@ def test_adms(adm):
     _move_file(mgr, OUT_DIR)
     _move_file(shared, OUT_DIR)
 
+    # compile the test in the gitlab CI
+
 
 def _find_dir(name, dir):
     """
@@ -59,8 +61,6 @@ def _move_file(fullpath, dir):
     moves and replaces the file to its other location in dir_to_look
     """
     name = os.path.split(fullpath)[1]
-    print(name) # TODO remove
-
     for root, _, files in os.walk(dir):
         if name in files:
             existing_file = os.path.join(root, name)
