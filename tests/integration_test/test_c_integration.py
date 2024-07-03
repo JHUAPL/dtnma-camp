@@ -9,14 +9,13 @@ ADMS_DIR = os.path.join("tests", "adms")  # TODO may move to util if same
 OUT_DIR = os.path.join("tests", "dtnma-tools", "src")
 ADM_SET = ace.AdmSet()
 
-@pytest.mark.parametrize("adm", ["amp_agent.json"])
+@pytest.mark.parametrize("adm", ["amp_agent.json", "ion_admin.json"])
 def test_adms(adm):
 
     filepath = os.path.join(ADMS_DIR, adm)  # input file full filepath
 
-    # if camp-generated files already exist, find where they are is so we know to scrap from 
-    # and output to
-    # agent.c, impl.c, impl.h generally in the same place
+    # if camp-generated files already exist, find where they are is so we know to scrap from and output to
+    # agent files (agent.c, impl.c, impl.h) in the same directory, the impl files get scraped
     norm_name = ADM_SET.load_from_file(filepath).norm_name
     impl = "adm_{name}_impl.c".format(name=norm_name)
     outdir = _find_dir(impl, OUT_DIR)
@@ -31,13 +30,6 @@ def test_adms(adm):
     shared = os.path.join(outdir, "shared", "adm", "adm_{name}.h".format(name=norm_name))
     _move_file(mgr, OUT_DIR)
     _move_file(shared, OUT_DIR)
-    print(mgr)
-    print("SHARED " + shared)
-
-    print(adm)
-    print(filepath)
-    print("EXISTING FILE NAMER " + impl)
-    print("FOUND AT " + outdir)
 
 
 def _find_dir(name, dir):
