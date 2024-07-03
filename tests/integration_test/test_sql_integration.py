@@ -49,7 +49,7 @@ def test_adms(setup, adm):
 
     # run camp
     filepath = os.path.join(ADMS_DIR, adm)
-    exitcode = _run_camp(filepath, ADMS_DIR, True, False)
+    exitcode = _run_camp(filepath, ADMS_DIR, only_sql=True, only_ch=False)
     assert 0 == exitcode
 
     # execute sql
