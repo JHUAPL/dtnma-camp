@@ -168,8 +168,7 @@ integration-test-c:
     - *prep-install-ca
     - *prep-install-pip
     - *prep-wheel-ace
-    - # TODO use different version of ADMs?
-    - 
+    # TODO use different version of ADMs?
   script:
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_c_integration.py
     - coverage xml
