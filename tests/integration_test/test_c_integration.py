@@ -9,8 +9,14 @@ ADMS_DIR = os.path.join("tests", "adms")  # TODO may move to util if same
 OUT_DIR = os.path.join("tests", "dtnma-tools", "src")
 ADM_SET = ace.AdmSet()
 
-@pytest.mark.parametrize("adm", ["amp_agent.json", "ion_admin.json"])
+@pytest.mark.parametrize("adm", [f for f in os.listdir(ADMS_DIR) if os.path.isfile(os.path.join(ADMS_DIR, f))])
 def test_adms(adm):
+
+    # ensure file is .json or .yang (and not the index.json file)
+    ext = os.path.splitext(adm)[1]
+    if (ext != ".json" and ext != ".yang") or adm == "index.json":
+        pytest.skip("file skipped: {f} is not an adm file".format(f=adm))
+
 
     filepath = os.path.join(ADMS_DIR, adm)  # input file full filepath
 
