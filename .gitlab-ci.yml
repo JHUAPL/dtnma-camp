@@ -91,7 +91,7 @@ cache:
   git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/anms-adms.git tests/anms-adms
 
 .prep-install-dtnma-tools: &prep-install-dtnma-tools |
-  git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/dtnma-tools.git tests/dtnma-tools
+  git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/dtn/dtnma-tools.git tests/dtnma-tools
 
 build:
   stage: build
