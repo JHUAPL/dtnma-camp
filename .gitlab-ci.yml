@@ -139,7 +139,10 @@ integration-test-sql:
     - *prep-install-ca
     - *prep-install-pip
     - *prep-wheel-ace
-    - *prep-install-adms # TODO re-enable
+    - *prep-install-adms
+    - ls tests/anms-adms
+    # - cd tests/anms-adms && git checkout apl-ep2-updates && cd ../..
+    # - ls tests/anms-adms
     - apt-get install -y postgresql # need for psycogp2 requirement
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
@@ -150,10 +153,6 @@ integration-test-sql:
     - sleep 15 # make sure docker container is up
     - docker container ps -a
   script:
-    # TODO: get anms-adms version of the adms
-    - ls tests/anms-adms
-    - cd tests/anms-adms && git checkout apl-ep2-updates && cd ../..
-    - ls tests/anms-adms
     - export ANMS_IP_ADDR=$(docker exec anms-lib hostname -i)
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_sql_integration.py
     - coverage xml
