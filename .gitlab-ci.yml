@@ -172,7 +172,7 @@ integration-test-c:
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-dtnma-tools
     - cd tests/dtnma-tools # TODO change branch?
-    - ls \-la
+    - ls
     - git submodule update --init --recursive
     # - ./prep.sh
     # - ./build.sh check
