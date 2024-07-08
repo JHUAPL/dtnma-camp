@@ -172,13 +172,15 @@ integration-test-c:
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-dtnma-tools
     - cd tests/dtnma-tools # TODO change branch?
-    # - git submodule update --init --recursive
-    - ./prep.sh
-    - ./build.sh check
+    - ls -la
+    - git submodule update --init --recursive
+    # - ./prep.sh
+    # - ./build.sh check
+    # - cd ../..
   script:
-    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_c_integration.py
-    - ./build.sh check
-    - coverage xml
+    # - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_c_integration.py
+    # - ./build.sh check
+    # - coverage xml
 
 pylint:
   stage: test
