@@ -163,7 +163,7 @@ integration-test-c:
   needs:
     - build
   allow_failure: true
-  before_script:
+  script:
     - *prep-repos
     - *prep-install-ca
     - *prep-install-pip
