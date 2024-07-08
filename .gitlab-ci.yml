@@ -173,7 +173,7 @@ integration-test-c:
     - *prep-install-dtnma-tools
     - cd tests/dtnma-tools # TODO change branch?
     - ls -la
-    - git submodule update --init --recursive
+    - git submodule update --init --recursive --no-single-branch --remote
     # - ./prep.sh
     # - ./build.sh check
     # - cd ../..
