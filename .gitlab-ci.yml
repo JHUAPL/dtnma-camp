@@ -140,10 +140,8 @@ integration-test-sql:
     - *prep-install-pip
     - *prep-wheel-ace
     - *prep-install-adms
-    - ls tests/anms-adms
-    # - cd tests/anms-adms && git checkout apl-ep2-updates && cd ../..
-    # - ls tests/anms-adms
-    - apt-get install -y postgresql # need for psycogp2 requirement
+    - cd tests/anms-adms && git checkout apl-ep2-updates && cd ../.. # change ADMs branch
+    # - apt-get install -y postgresql # need for psycogp2 requirement
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-docker
