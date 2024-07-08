@@ -91,7 +91,7 @@ cache:
   git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/anms-adms.git tests/anms-adms
 
 .prep-install-dtnma-tools: &prep-install-dtnma-tools |
-  git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/dtn/dtnma-tools.git tests/dtnma-tools
+  git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/dtnma-tools.git tests/dtnma-tools
 
 build:
   stage: build
@@ -139,7 +139,7 @@ integration-test-sql:
     - *prep-install-ca
     - *prep-install-pip
     - *prep-wheel-ace
-    # - *prep-install-adms # TODO re-enable
+    - *prep-install-adms # TODO re-enable
     - apt-get install -y postgresql # need for psycogp2 requirement
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
