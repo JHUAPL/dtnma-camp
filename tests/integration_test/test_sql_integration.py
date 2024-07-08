@@ -5,7 +5,7 @@ import pytest
 
 from .util import _run_camp
 
-ADMS_DIR = os.path.join("tests", "adms")
+ADMS_DIR = os.path.join("tests", "anms-adms")
 
 @pytest.fixture(scope="session", autouse=True)
 def setup():

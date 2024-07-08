@@ -151,9 +151,9 @@ integration-test-sql:
     - docker container ps -a
   script:
     # TODO: get anms-adms version of the adms
-    # - ls tests/anms-adms
-    # - cd tests/anms-adms && git checkout apl-ep2-updates && cd ../..
-    # - ls tests/anms-adms
+    - ls tests/anms-adms
+    - cd tests/anms-adms && git checkout apl-ep2-updates && cd ../..
+    - ls tests/anms-adms
     - export ANMS_IP_ADDR=$(docker exec anms-lib hostname -i)
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_sql_integration.py
     - coverage xml
