@@ -170,6 +170,7 @@ integration-test-c:
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-dtnma-tools
+    - git config http.postBuffer 52428800
     - git clone https://github.com/ThrowTheSwitch/Unity.git --verbose
     - rm -rf Unity
     # - cd tests/dtnma-tools # TODO change branch?
