@@ -145,13 +145,12 @@ integration-test-sql:
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-docker
-    - docker network ls
     - docker build -t amp-sql:1.0 ../amp-sql/ # TODO prob on main branch... is this okay?
     - docker run --name anms-lib -e POSTGRES_PASSWORD=root -d amp-sql:1.0
     - sleep 15 # make sure docker container is up
     - docker container ps -a
-  script:
     - export ANMS_IP_ADDR=$(docker exec anms-lib hostname -i)
+  script:
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_sql_integration.py
     - coverage xml
   after_script:
@@ -173,6 +172,7 @@ integration-test-c:
     - *prep-install-dtnma-tools
     - cd tests/dtnma-tools # TODO change branch?
     - ls -la
+    - apt install gnutls-bin -y
     - git submodule update --init --recursive
     # - ./prep.sh
     # - ./build.sh check
