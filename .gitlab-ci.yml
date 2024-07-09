@@ -207,12 +207,15 @@ integration-test-c:
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-dtnma-tools
     - *prep-openssl-git-build
-    - cd tests/dtnma-tools # TODO change branch?
-    - ls -la
-    - git submodule update --init --recursive
-    - ./prep.sh
-    - ./build.sh check
-    - cd ../..
+    - git clone https://github.com/UWCubeSat/lost.git --verbose
+    - ls lost
+    - rm -rf lost
+    # - cd tests/dtnma-tools # TODO change branch?
+    # - ls -la
+    # - git submodule update --init --recursive
+    # - ./prep.sh
+    # - ./build.sh check
+    # - cd ../..
   script:
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_c_integration.py
     # - ./build.sh check
