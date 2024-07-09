@@ -42,10 +42,6 @@ variables:
   # Project-spcific environment
   XDG_CACHE_HOME: "$CI_PROJECT_DIR/.cache"
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-  # TODO debug remove
-  GIT_TRACE_PACKET: 1
-  GIT_TRACE: 1
-  GIT_CURL_VERBOSE: 1
 
 
 stages:
@@ -210,14 +206,9 @@ integration-test-c:
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-dtnma-tools
-    # - *prep-openssl-git-build
-    # - apt-get install gnutls-bin -y
-    # - git config --list --show-origin
-    # - git config http.postBuffer 1048576000
-    - git clone https://github.com/UWCubeSat/lost
-    - rm -rf lost
-    # - git clone https://github.com/ThrowTheSwitch/Unity.git --depth=1 --verbose
-    # - rm -rf Unity
+    - *prep-openssl-git-build
+    - git clone https://github.com/ThrowTheSwitch/Unity.git --depth=1 --verbose
+    - rm -rf Unity
     # - cd tests/dtnma-tools # TODO change branch?
     # - ls -la
     # - apt-get install gnutls-bin -y
