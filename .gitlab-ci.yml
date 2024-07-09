@@ -175,8 +175,8 @@ integration-test-c:
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-dtnma-tools
     - apt-get install gnutls-bin -y
+    - git config --list --show-origin
     - git config http.postBuffer 1048576000
-    - cat ~/.gitconfig
     - git clone https://github.com/ThrowTheSwitch/Unity.git --depth=1 --verbose
     # - rm -rf Unity
     # - cd tests/dtnma-tools # TODO change branch?
