@@ -32,6 +32,7 @@ include:
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_FORCE_HTTPS: "true"
   DOCKER_BUILDKIT: 1
   DEBIAN_FRONTEND: "noninteractive"
   # for Python/PIP
@@ -172,7 +173,7 @@ integration-test-c:
     - *prep-install-dtnma-tools
     - cd tests/dtnma-tools # TODO change branch?
     - ls -la
-    - apt install gnutls-bin -y
+    - apt-get install gnutls-bin -y
     - git submodule update --init --recursive
     # - ./prep.sh
     # - ./build.sh check
