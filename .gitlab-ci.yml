@@ -128,6 +128,15 @@ cache:
   # Install
   find .. -type f -name "git_*ubuntu*.deb" -exec dpkg -i \{\} \;
 
+.prep-openssl-git-build2: &prep-openssl-git-build2 |
+  ls -la
+  wget https://apllinuxdepot.jhuapl.edu/linux/GIT-Openssl/git-2.28.0-20.04.tar
+  tar -xvf git-2.28.0-20.04.tar
+  ls git-2.28.0-20.04.tar/ -la
+  dpkg -i git-2.28.0-20.04.tar/git*.deb
+  apt-mark hold git
+  apt-mark hold git-man
+  apt-makr hold git-2.28.0-20.04.tar/git*.deb
 
 build:
   stage: build
@@ -205,17 +214,14 @@ integration-test-c:
     - *prep-wheel-ace
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
+    - *prep-openssl-git-build2
     - *prep-install-dtnma-tools
-    - *prep-openssl-git-build
-    - git clone https://github.com/UWCubeSat/lost.git --verbose
-    - ls lost
-    - rm -rf lost
-    # - cd tests/dtnma-tools # TODO change branch?
-    # - ls -la
-    # - git submodule update --init --recursive
-    # - ./prep.sh
-    # - ./build.sh check
-    # - cd ../..
+    - cd tests/dtnma-tools # TODO change branch?
+    - ls -la
+    - git submodule update --init --recursive
+    - ./prep.sh
+    - ./build.sh check
+    - cd ../..
   script:
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_c_integration.py
     # - ./build.sh check
