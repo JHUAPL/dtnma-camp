@@ -32,7 +32,6 @@ include:
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
-  GIT_SUBMODULE_FORCE_HTTPS: "true"
   DOCKER_BUILDKIT: 1
   DEBIAN_FRONTEND: "noninteractive"
   # for Python/PIP
@@ -171,10 +170,12 @@ integration-test-c:
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-dtnma-tools
-    - cd tests/dtnma-tools # TODO change branch?
-    - ls -la
-    - apt-get install gnutls-bin -y
-    - git submodule update --init --recursive
+    - git clone https://github.com/ThrowTheSwitch/Unity.git
+    - rm -rf Unity
+    # - cd tests/dtnma-tools # TODO change branch?
+    # - ls -la
+    # - apt-get install gnutls-bin -y
+    # - git submodule update --init --recursive
     # - ./prep.sh
     # - ./build.sh check
     # - cd ../..
