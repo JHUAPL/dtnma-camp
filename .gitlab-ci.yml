@@ -98,20 +98,38 @@ cache:
   git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/dtnma-tools.git tests/dtnma-tools
 
 .prep-openssl-git-build: &prep-openssl-git-build |
+  # from https://aplprod.servicenowservices.com/sp?id=kb_article&sys_id=797a2dcc1bdab994bcc3631dac4bcbbe
+  # Clear out all previous attempts
   rm -rf "/tmp/source-git/"
+
+  # Add PPA for latest git
+  apt-get update
+  apt-get install software-properties-common -y
   add-apt-repository --enable-source ppa:git-core/ppa
   apt-get update
+
+  # Get the dependencies for git, then get openssl
   apt-get install build-essential fakeroot dpkg-dev -y
   apt-get build-dep git -y
   apt-get install libcurl4-openssl-dev -y
   mkdir -p "/tmp/source-git/"
   cd "/tmp/source-git/"
   apt-get source git
+
+  # We need to actually go into the git source directory
+  # find -type f -name "*.dsc" -exec dpkg-source -x \{\} \;
   cd $(find -mindepth 1 -maxdepth 1 -type d -name "git-*")
   pwd
+
+  # This is where we actually change the library from one type to the other.
   sed -i -- 's/libcurl4-gnutls-dev/libcurl4-openssl-dev/' ./debian/control
+  # Compile time, itself, is long. Skips the tests. Do so at your own peril.
   sed -i -- '/TEST\s*=\s*test/d' ./debian/rules
+
+  # Build it.
   dpkg-buildpackage -rfakeroot -b -uc -us
+
+  # Install
   find .. -type f -name "git_*ubuntu*.deb" -exec dpkg -i \{\} \;
 
 
