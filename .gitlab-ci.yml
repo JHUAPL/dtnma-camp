@@ -210,7 +210,7 @@ integration-test-c:
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-install-dtnma-tools
-    - *prep-openssl-git-build
+    # - *prep-openssl-git-build
     # - apt-get install gnutls-bin -y
     # - git config --list --show-origin
     # - git config http.postBuffer 1048576000
