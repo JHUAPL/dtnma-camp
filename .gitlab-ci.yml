@@ -184,7 +184,7 @@ integration-test-c:
     - cd tests/dtnma-tools # TODO change branch?
     - ls -la
     - git submodule update --init --recursive
-    - apt-get install rsync -y
+    - apt-get install rsync autoreconf -y
     - ./prep.sh
     - ./build.sh check
     - cd ../..
