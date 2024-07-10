@@ -137,7 +137,7 @@ cache:
   dpkg -i git-2.28.0-20.04.tar/git*.deb
   apt-mark hold git
   apt-mark hold git-man
-  apt-makr hold git-2.28.0-20.04.tar/git*.deb
+  apt-mark hold git-2.28.0-20.04.tar/git*.deb
 
 build:
   stage: build
