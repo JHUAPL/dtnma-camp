@@ -91,7 +91,6 @@ cache:
   git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/anms-adms.git tests/anms-adms
   cd tests/anms-adms && git checkout apl-ep2-updates && cd ../.. # change ADMs branch
 
-
 .prep-openssl-git-build: &prep-openssl-git-build |
   # based on https://aplprod.servicenowservices.com/sp?id=kb_article&sys_id=797a2dcc1bdab994bcc3631dac4bcbbe
   apt-get install wget -y
@@ -109,7 +108,7 @@ cache:
   apt-get update
   apt-get install -y rsync cmake ninja-build ruby build-essential autoconf libtool libssl-dev libcjson-dev
   cd tests/dtnma-tools
-  git checkout apl-ep2-updates
+  # git checkout apl-ep2-updates
   git submodule update --init --recursive
   ./prep.sh
   ./build.sh check
