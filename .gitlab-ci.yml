@@ -93,7 +93,7 @@ cache:
 .prep-install-dtnma-tools: &prep-install-dtnma-tools |
   git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/dtnma-tools.git tests/dtnma-tools
 
-.prep-openssl-git-build2: &prep-openssl-git-build2 |
+.prep-openssl-git-build2: &prep-openssl-git-build |
   # based on https://aplprod.servicenowservices.com/sp?id=kb_article&sys_id=797a2dcc1bdab994bcc3631dac4bcbbe
   apt-get install wget -y
   wget https://apllinuxdepot.jhuapl.edu/linux/GIT-Openssl/git-2.28.0-20.04.tar
