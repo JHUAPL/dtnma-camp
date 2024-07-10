@@ -181,7 +181,7 @@ integration-test-c:
     - *prep-wheel-ace
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
-    # - *prep-openssl-git-build
+    - *prep-openssl-git-build
     - *prep-install-dtnma-tools
     - cd tests/dtnma-tools # TODO change branch?
     - ls -la
