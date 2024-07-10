@@ -130,6 +130,7 @@ cache:
 
 .prep-openssl-git-build2: &prep-openssl-git-build2 |
   ls -la
+  apt-get install wget -y
   wget https://apllinuxdepot.jhuapl.edu/linux/GIT-Openssl/git-2.28.0-20.04.tar
   tar -xvf git-2.28.0-20.04.tar
   ls git-2.28.0-20.04.tar/ -la
