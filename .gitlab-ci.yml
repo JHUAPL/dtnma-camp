@@ -179,12 +179,14 @@ integration-test-c:
     - *prep-wheel-ace
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
-    - *prep-openssl-git-build
+    # - *prep-openssl-git-build
     - *prep-install-dtnma-tools
     - cd tests/dtnma-tools # TODO change branch?
     - ls -la
+    # - git submodule update --init --recursive
+    # - apt-get install rsync autoreconf -y
+    - apt-get install cmake ninja-build ruby build-essential autoconf libtool civetweb libcivetweb-dev libssl-dev libcjson-dev -y
     - git submodule update --init --recursive
-    - apt-get install rsync autoreconf -y
     - ./prep.sh
     - ./build.sh check
     - cd ../..
