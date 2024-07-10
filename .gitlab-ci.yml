@@ -134,23 +134,25 @@ cache:
   wget https://apllinuxdepot.jhuapl.edu/linux/GIT-Openssl/git-2.28.0-20.04.tar
   tar -xvf git-2.28.0-20.04.tar
   ls git-2.28.0-20.04/ -la
-  dpkg -i git-2.28.0-20.04/git*.deb
+  # dpkg -i git-2.28.0-20.04/git*.deb
+  dpkg -i git-2.28.0-20.04/git_*.deb
+  dpkg -i git-2.28.0-20.04/git-man*.deb
   apt-mark hold git
   apt-mark hold git-man
-  apt-mark hold git-2.28.0-20.04/git-all_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  apt-mark hold git-2.28.0-20.04/git-cvs_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  apt-mark hold git-2.28.0-20.04/git-daemon-run_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  apt-mark hold git-2.28.0-20.04/git-daemon-sysvinit_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  apt-mark hold git-2.28.0-20.04/git-doc_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  apt-mark hold git-2.28.0-20.04/git-el_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  apt-mark hold git-2.28.0-20.04/git-email_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  apt-mark hold git-2.28.0-20.04/git-gui_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  apt-mark hold git-2.28.0-20.04/git-man_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  apt-mark hold git-2.28.0-20.04/git-mediawiki_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  apt-mark hold git-2.28.0-20.04/git-svn_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  apt-mark hold git-2.28.0-20.04/git_2.28.0-0ppa1~ubuntu20.04.1_amd64.deb
-  apt-mark hold git-2.28.0-20.04/gitk_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  apt-mark hold git-2.28.0-20.04/gitweb_2.28.0-0ppa1~ubuntu20.04.1_all.deb
+  # apt-mark hold git-2.28.0-20.04/git-all_2.28.0-0ppa1~ubuntu20.04.1_all.deb
+  # apt-mark hold git-2.28.0-20.04/git-cvs_2.28.0-0ppa1~ubuntu20.04.1_all.deb
+  # apt-mark hold git-2.28.0-20.04/git-daemon-run_2.28.0-0ppa1~ubuntu20.04.1_all.deb
+  # apt-mark hold git-2.28.0-20.04/git-daemon-sysvinit_2.28.0-0ppa1~ubuntu20.04.1_all.deb
+  # apt-mark hold git-2.28.0-20.04/git-doc_2.28.0-0ppa1~ubuntu20.04.1_all.deb
+  # apt-mark hold git-2.28.0-20.04/git-el_2.28.0-0ppa1~ubuntu20.04.1_all.deb
+  # apt-mark hold git-2.28.0-20.04/git-email_2.28.0-0ppa1~ubuntu20.04.1_all.deb
+  # apt-mark hold git-2.28.0-20.04/git-gui_2.28.0-0ppa1~ubuntu20.04.1_all.deb
+  # apt-mark hold git-2.28.0-20.04/git-man_2.28.0-0ppa1~ubuntu20.04.1_all.deb
+  # apt-mark hold git-2.28.0-20.04/git-mediawiki_2.28.0-0ppa1~ubuntu20.04.1_all.deb
+  # apt-mark hold git-2.28.0-20.04/git-svn_2.28.0-0ppa1~ubuntu20.04.1_all.deb
+  # apt-mark hold git-2.28.0-20.04/git_2.28.0-0ppa1~ubuntu20.04.1_amd64.deb
+  # apt-mark hold git-2.28.0-20.04/gitk_2.28.0-0ppa1~ubuntu20.04.1_all.deb
+  # apt-mark hold git-2.28.0-20.04/gitweb_2.28.0-0ppa1~ubuntu20.04.1_all.deb
 
 build:
   stage: build
