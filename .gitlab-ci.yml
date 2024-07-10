@@ -92,6 +92,7 @@ cache:
 
 .prep-install-dtnma-tools: &prep-install-dtnma-tools |
   git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/dtnma-tools.git tests/dtnma-tools
+  apt-get install cmake ninja-build ruby build-essential autoconf libtool libssl-dev libcjson-dev -y
 
 .prep-openssl-git-build: &prep-openssl-git-build |
   # based on https://aplprod.servicenowservices.com/sp?id=kb_article&sys_id=797a2dcc1bdab994bcc3631dac4bcbbe
@@ -185,7 +186,6 @@ integration-test-c:
     - ls -la
     # - git submodule update --init --recursive
     # - apt-get install rsync autoreconf -y
-    - apt-get install cmake ninja-build ruby build-essential autoconf libtool civetweb libcivetweb-dev libssl-dev libcjson-dev -y
     - git submodule update --init --recursive
     - ./prep.sh
     - ./build.sh check
