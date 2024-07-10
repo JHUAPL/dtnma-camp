@@ -1,8 +1,11 @@
 ''' Shared test fixture utilities.
 '''
 import argparse
+import os
 
 from camp.tools.camp import run
+
+ADMS_DIR = os.path.join("tests", "anms-adms")
 
 def _run_camp(filepath, outpath, only_sql, only_ch, scrape=False):
     """

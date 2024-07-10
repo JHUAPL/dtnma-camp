@@ -4,9 +4,8 @@ import ace
 import shutil
 import subprocess
 
-from .util import _run_camp
+from .util import _run_camp, ADMS_DIR
 
-ADMS_DIR = os.path.join("tests", "adms")  # TODO may move to util if same
 OUT_DIR = os.path.join("tests", "dtnma-tools", "src")
 ADM_SET = ace.AdmSet()
 
@@ -39,7 +38,8 @@ def test_adms(adm):
     _move_file(shared, OUT_DIR)
 
     # compile here (must run test from home directory)
-    assert 0 == subprocess.run(["cd", "tests/dtnma-tools/", "&&", "./build.sh", "check", "&&", "cd", "../.."]).returncode
+    assert 0 == subprocess.run(["cd", "tests/dtnma-tools/", "&&", "./build.sh", "check"]).returncode
+
 
 def _find_dir(name, dir):
     """
