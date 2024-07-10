@@ -2,6 +2,7 @@ import pytest
 import os
 import ace
 import shutil
+import subprocess
 
 from .util import _run_camp
 
@@ -37,8 +38,8 @@ def test_adms(adm):
     _move_file(mgr, OUT_DIR)
     _move_file(shared, OUT_DIR)
 
-    # compile the test in the gitlab CI
-
+    # compile here (must run test from home directory)
+    assert 0 == subprocess.run(["cd", "tests/dtnma-tools/", "&&", "./build.sh", "check", "&&", "cd", "../.."]).returncode
 
 def _find_dir(name, dir):
     """

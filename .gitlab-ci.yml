@@ -192,7 +192,6 @@ integration-test-c:
     - *prep-install-dtnma-tools
   script:
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_c_integration.py
-    - ./tests/dtnma-tools/build.sh check
     - coverage xml
 
 pylint:
