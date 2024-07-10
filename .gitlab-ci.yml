@@ -106,9 +106,10 @@ cache:
   # installs and compiles the dtnma-tools repo
   # prep-openssl-git-build needs to run first for this to work
   git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/dtnma-tools.git tests/dtnma-tools
+  git checkout apl-ep2-updates
   apt-get update
   apt-get install -y rsync cmake ninja-build ruby build-essential autoconf libtool libssl-dev libcjson-dev
-  cd tests/dtnma-tools # TODO change branch?
+  cd tests/dtnma-tools
   git submodule update --init --recursive
   ./prep.sh
   ./build.sh check
