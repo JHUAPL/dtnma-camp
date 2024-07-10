@@ -93,66 +93,15 @@ cache:
 .prep-install-dtnma-tools: &prep-install-dtnma-tools |
   git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/dtnma-tools.git tests/dtnma-tools
 
-.prep-openssl-git-build: &prep-openssl-git-build |
-  # from https://aplprod.servicenowservices.com/sp?id=kb_article&sys_id=797a2dcc1bdab994bcc3631dac4bcbbe
-  # Clear out all previous attempts
-  rm -rf "/tmp/source-git/"
-
-  # Add PPA for latest git
-  apt-get update
-  apt-get install software-properties-common -y
-  add-apt-repository --enable-source ppa:git-core/ppa
-  apt-get update
-
-  # Get the dependencies for git, then get openssl
-  apt-get install build-essential fakeroot dpkg-dev -y
-  apt-get build-dep git -y
-  apt-get install libcurl4-openssl-dev -y
-  mkdir -p "/tmp/source-git/"
-  cd "/tmp/source-git/"
-  apt-get source git
-
-  # We need to actually go into the git source directory
-  # find -type f -name "*.dsc" -exec dpkg-source -x \{\} \;
-  cd $(find -mindepth 1 -maxdepth 1 -type d -name "git-*")
-  pwd
-
-  # This is where we actually change the library from one type to the other.
-  sed -i -- 's/libcurl4-gnutls-dev/libcurl4-openssl-dev/' ./debian/control
-  # Compile time, itself, is long. Skips the tests. Do so at your own peril.
-  sed -i -- '/TEST\s*=\s*test/d' ./debian/rules
-
-  # Build it.
-  dpkg-buildpackage -rfakeroot -b -uc -us
-
-  # Install
-  find .. -type f -name "git_*ubuntu*.deb" -exec dpkg -i \{\} \;
-
 .prep-openssl-git-build2: &prep-openssl-git-build2 |
-  ls -la
+  # based on https://aplprod.servicenowservices.com/sp?id=kb_article&sys_id=797a2dcc1bdab994bcc3631dac4bcbbe
   apt-get install wget -y
   wget https://apllinuxdepot.jhuapl.edu/linux/GIT-Openssl/git-2.28.0-20.04.tar
   tar -xvf git-2.28.0-20.04.tar
-  ls git-2.28.0-20.04/ -la
-  # dpkg -i git-2.28.0-20.04/git*.deb
   dpkg -i git-2.28.0-20.04/git-man*.deb
   dpkg -i git-2.28.0-20.04/git_*.deb
   apt-mark hold git
   apt-mark hold git-man
-  # apt-mark hold git-2.28.0-20.04/git-all_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  # apt-mark hold git-2.28.0-20.04/git-cvs_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  # apt-mark hold git-2.28.0-20.04/git-daemon-run_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  # apt-mark hold git-2.28.0-20.04/git-daemon-sysvinit_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  # apt-mark hold git-2.28.0-20.04/git-doc_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  # apt-mark hold git-2.28.0-20.04/git-el_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  # apt-mark hold git-2.28.0-20.04/git-email_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  # apt-mark hold git-2.28.0-20.04/git-gui_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  # apt-mark hold git-2.28.0-20.04/git-man_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  # apt-mark hold git-2.28.0-20.04/git-mediawiki_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  # apt-mark hold git-2.28.0-20.04/git-svn_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  # apt-mark hold git-2.28.0-20.04/git_2.28.0-0ppa1~ubuntu20.04.1_amd64.deb
-  # apt-mark hold git-2.28.0-20.04/gitk_2.28.0-0ppa1~ubuntu20.04.1_all.deb
-  # apt-mark hold git-2.28.0-20.04/gitweb_2.28.0-0ppa1~ubuntu20.04.1_all.deb
 
 build:
   stage: build
@@ -230,7 +179,7 @@ integration-test-c:
     - *prep-wheel-ace
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
-    - *prep-openssl-git-build2
+    - *prep-openssl-git-build
     - *prep-install-dtnma-tools
     - cd tests/dtnma-tools # TODO change branch?
     - ls -la
