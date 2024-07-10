@@ -93,7 +93,7 @@ cache:
 
 .prep-openssl-git-build: &prep-openssl-git-build |
   # based on https://aplprod.servicenowservices.com/sp?id=kb_article&sys_id=797a2dcc1bdab994bcc3631dac4bcbbe
-  apt-get install wget -y
+  apt-get install -y wget
   wget https://apllinuxdepot.jhuapl.edu/linux/GIT-Openssl/git-2.28.0-20.04.tar
   tar -xvf git-2.28.0-20.04.tar
   dpkg -i git-2.28.0-20.04/git-man*.deb
@@ -109,6 +109,7 @@ cache:
   apt-get install -y rsync cmake ninja-build ruby build-essential autoconf libtool libssl-dev libcjson-dev
   cd tests/dtnma-tools
   # git checkout apl-ep2-updates
+  git config --list --show-origin
   git submodule update --init --recursive
   ./prep.sh
   ./build.sh check
