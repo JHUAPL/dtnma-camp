@@ -38,7 +38,7 @@ def test_adms(adm):
     _move_file(shared, OUT_DIR)
 
     # compile here (must run test from home directory)
-    assert 0 == subprocess.run(["cd", "tests/dtnma-tools/", "&&", "./build.sh", "check"]).returncode
+    assert 0 == subprocess.call(["./build.sh", "check"], cwd="./tests/dtnma-tools")
 
 
 def _find_dir(name, dir):
