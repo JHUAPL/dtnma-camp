@@ -25,6 +25,10 @@ def test_adms(adm):
     norm_name = ADM_SET.load_from_file(filepath).norm_name
     impl = "adm_{name}_impl.c".format(name=norm_name)
     outdir = _find_dir(impl, OUT_DIR)
+
+    # skip bp-version-dependent files for nwo
+    if outdir.endswith("src/ion_if/bpv7"):
+        pytest.skip("file skipped: {f} is not bp-independent".format(f=adm))
     
     # run camp
     exitcode = _run_camp(filepath, outdir, only_sql=False, only_ch=True, scrape=True)
