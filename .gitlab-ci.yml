@@ -109,7 +109,9 @@ cache:
   apt-get install -y rsync cmake ninja-build ruby build-essential autoconf libtool libssl-dev libcjson-dev
   cd tests/dtnma-tools
   git checkout apl-ep2-updates
-  git config --list --show-origin
+  git config --list --show-origin # TODO remove
+  git config http.postBuffer 1048576000
+  git config --list --show-origin # TODO remove
   git submodule update --init --recursive
   ./prep.sh
   ./build.sh check
