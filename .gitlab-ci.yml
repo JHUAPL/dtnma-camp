@@ -90,11 +90,6 @@ cache:
 .prep-install-adms: &prep-install-adms |
   git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/anms-adms.git tests/anms-adms
 
-.prep-install-dtnma-tools: &prep-install-dtnma-tools |
-  git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/dtnma-tools.git tests/dtnma-tools
-  apt-get update
-  apt-get install -y cmake ninja-build ruby build-essential autoconf libtool libssl-dev libcjson-dev
-
 .prep-openssl-git-build: &prep-openssl-git-build |
   # based on https://aplprod.servicenowservices.com/sp?id=kb_article&sys_id=797a2dcc1bdab994bcc3631dac4bcbbe
   apt-get install wget -y
@@ -104,6 +99,18 @@ cache:
   dpkg -i git-2.28.0-20.04/git_*.deb
   apt-mark hold git
   apt-mark hold git-man
+
+.prep-install-dtnma-tools: &prep-install-dtnma-tools |
+  # installs and compiles the dtnma-tools repo
+  # prep-openssl-git-build needs to run first for this to work
+  git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/dtnma-tools.git tests/dtnma-tools
+  apt-get update
+  apt-get install -y rsync cmake ninja-build ruby build-essential autoconf libtool libssl-dev libcjson-dev
+  cd tests/dtnma-tools # TODO change branch?
+  git submodule update --init --recursive
+  ./prep.sh
+  ./build.sh check
+  cd ../..
 
 build:
   stage: build
@@ -183,17 +190,10 @@ integration-test-c:
     - pip3 install --find-links ./wheels -r requirements.txt
     - *prep-openssl-git-build
     - *prep-install-dtnma-tools
-    - cd tests/dtnma-tools # TODO change branch?
-    - ls -la
-    - git submodule update --init --recursive
-    - apt-get install -y rsync
-    - ./prep.sh
-    - ./build.sh check
-    - cd ../..
   script:
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_c_integration.py
-    # - ./build.sh check
-    # - coverage xml
+    - ./tests/dtnma-tools/build.sh check
+    - coverage xml
 
 pylint:
   stage: test
