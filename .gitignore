@@ -20,5 +20,3 @@ shared/
 testresults.xml
 .coverage
 coverage.xml
-tests/anms-adms/
-tests/integration_test/adms

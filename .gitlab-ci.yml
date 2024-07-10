@@ -65,13 +65,13 @@ cache:
   update-ca-certificates
 
 .prep-install-pip: &prep-install-pip |
-    apt-get update && apt-get install -y git python3 python3-venv python3-pip python3-wheel
-    pip3 config --global set global.index-url https://artifactory.jhuapl.edu/artifactory/api/pypi/python-remote/simple
-    pip3 install pip-tools
+  apt-get update && apt-get install -y git python3 python3-venv python3-pip python3-wheel
+  pip3 config --global set global.index-url https://artifactory.jhuapl.edu/artifactory/api/pypi/python-remote/simple
+  pip3 install pip-tools
 
 .prep-wheel-ace: &prep-wheel-ace |
-    pip3 wheel git+https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/dtn/ace.git -w ./wheels --no-deps
-    git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/dtn/adms.git tests/adms
+  pip3 wheel git+https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/dtn/ace.git -w ./wheels --no-deps
+  git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/dtn/adms.git tests/adms
 
 .prep-install-docker: &prep-install-docker |
   apt-get update -y
@@ -109,9 +109,6 @@ cache:
   apt-get install -y rsync cmake ninja-build ruby build-essential autoconf libtool libssl-dev libcjson-dev
   cd tests/dtnma-tools
   git checkout apl-ep2-updates
-  git config --list --show-origin # TODO remove
-  git config http.postBuffer 1048576000
-  git config --list --show-origin # TODO remove
   git submodule update --init --recursive
   ./prep.sh
   ./build.sh check
