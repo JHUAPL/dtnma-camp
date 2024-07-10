@@ -4,13 +4,26 @@ import ace
 import shutil
 import subprocess
 
-from .util import _run_camp, ADMS_DIR
+from .util import _run_camp, ADMS_DIR, DTNMA_TOOLS_DIR
 
-OUT_DIR = os.path.join("tests", "dtnma-tools", "src")
+OUT_DIR = os.path.join(DTNMA_TOOLS_DIR, "src")
 ADM_SET = ace.AdmSet()
+
+@pytest.fixture(autouse=True)
+def setup():
+    """
+    Resets the dtnma-tools directory
+    """
+    subprocess.check_call(["git", "restore", "."], cwd=DTNMA_TOOLS_DIR)
+
 
 @pytest.mark.parametrize("adm", [f for f in os.listdir(ADMS_DIR) if os.path.isfile(os.path.join(ADMS_DIR, f))])
 def test_adms(adm):
+    """
+    Compiles each adm in ADMS_DIR against DNTMA_TOOLS_DIR
+    @pre: ADMS_DIR and DTNMA_TOOLS_DIR are the home folder of git repos
+    """
+
 
     # ensure file is .json or .yang (and not the index.json file)
     ext = os.path.splitext(adm)[1]
@@ -42,7 +55,7 @@ def test_adms(adm):
     _move_file(shared, OUT_DIR)
 
     # compile here (must run test from home directory)
-    assert 0 == subprocess.call(["./build.sh", "check"], cwd="./tests/dtnma-tools")
+    assert 0 == subprocess.call(["./build.sh", "check"], cwd=DTNMA_TOOLS_DIR)
 
 
 def _find_dir(name, dir):
