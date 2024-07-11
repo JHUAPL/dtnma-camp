@@ -12,7 +12,8 @@ ADM_SET = ace.AdmSet()
 @pytest.fixture(autouse=True)
 def setup():
     """
-    Resets the dtnma-tools directory
+    Restores the dtnma-tools repository
+    @pre: DTNMA_TOOLS_DIR is a git working copy
     """
     subprocess.check_call(["git", "restore", "."], cwd=DTNMA_TOOLS_DIR)
 
@@ -20,10 +21,10 @@ def setup():
 @pytest.mark.parametrize("adm", [f for f in os.listdir(ADMS_DIR) if os.path.isfile(os.path.join(ADMS_DIR, f))])
 def test_adms(adm):
     """
-    Compiles each adm in ADMS_DIR against DNTMA_TOOLS_DIR
-    @pre: ADMS_DIR and DTNMA_TOOLS_DIR are the home folder of git repos
+    Compiles each adm in ADMS_DIR against the dtnma-tools repo
+    Skips files in the dtnma-tools repo's src/ion_if/bpv7 directory
+    @pre: DTNMA_TOOLS_DIR is a git working copy, tests should be run from home directory of camp repo
     """
-
 
     # ensure file is .json or .yang (and not the index.json file)
     ext = os.path.splitext(adm)[1]
@@ -42,7 +43,7 @@ def test_adms(adm):
     # skip bp-version-dependent files for nwo
     if outdir.endswith("src/ion_if/bpv7"):
         pytest.skip("file skipped: {f} is not bp-independent".format(f=adm))
-    
+
     # run camp
     exitcode = _run_camp(filepath, outdir, only_sql=False, only_ch=True, scrape=True)
     assert 0 == exitcode
@@ -54,7 +55,7 @@ def test_adms(adm):
     _move_file(mgr, OUT_DIR)
     _move_file(shared, OUT_DIR)
 
-    # compile here (must run test from home directory)
+    # compile here
     assert 0 == subprocess.call(["./build.sh", "check"], cwd=DTNMA_TOOLS_DIR)
 
 
@@ -63,7 +64,7 @@ def _find_dir(name, dir):
     If the generated C file already exists in dir, returns the directory in which the generated
     C files should be placed (as it should be passed to CAmp--takes into account that CAmp creates
     directories as well). If the file is not found, returns dir.
-    (Based on the structure of the DTNMA tools repo's src folder)
+    (Based on the structure of the dtnma-tools repo's src folder)
     """
     for root, _, files in os.walk(dir):
         if name in files:
