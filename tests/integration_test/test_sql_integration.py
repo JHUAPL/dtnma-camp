@@ -10,7 +10,7 @@ from .util import _run_camp, ADMS_DIR
 def setup():
     """
     Connects to the ADMS library session. Cleans up connections once done.
-    IP Address of the library session should be stored in env var $ANMS_IP_ADDR
+    @pre: IP Address of the library session should be stored in env var $ANMS_IP_ADDR
     @yields tuple of (connection object, AdmSet())
     """
 
