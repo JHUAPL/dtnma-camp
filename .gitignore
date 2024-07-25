@@ -8,7 +8,7 @@ __pycache__
 requirements.txt
 build
 dist
-.venv/
+.venv*/
 
 # Tool outputs
 agent/
