@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "anms-CAmp"
+name = "dtnma-camp"
 version = "2.0.0"
 authors = [
   { name="JHU/APL", email="dtnma-support@jhuapl.edu" },
@@ -20,7 +20,7 @@ classifiers = [
 ]
 
 dependencies = [
-  "anms-ace",
+  "dtnma-ace",
   "cbor2",
   "configobj",
   "xdg",
@@ -63,5 +63,5 @@ max-line-length=100
 camp = "camp.tools.camp:main"
 
 [project.urls]
-"Homepage" = "https://github.com/NASA-AMMOS/anms-camp"
-"Bug Tracker" = "https://github.com/NASA-AMMOS/anms-camp/issues"
+"Homepage" = "https://github.com/JHUAPL/dtnma-camp"
+"Bug Tracker" = "https://github.com/JHUAPL/dtnma-camp/issues"
