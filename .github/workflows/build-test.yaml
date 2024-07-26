@@ -2,7 +2,7 @@ name: Build and run unit tests
 on: [push]
 
 env:
-  ACE_REPO: "git+https://github.com/JHUAPL/dtnma-ace.git"
+  ACE_REPO: "git+https://github.com/JHUAPL/dtnma-ace.git@apl-fy24"
 
 jobs:
   build:
