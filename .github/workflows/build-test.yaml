@@ -1,6 +1,9 @@
 name: Build and run unit tests
 on: [push]
 
+env:
+  ACE_REPO: "git+https://github.com/JHUAPL/dtnma-ace.git"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,15 +13,17 @@ jobs:
         python-version: ["3.10"]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Prep
-        run: pip3 install build
+        run: |
+          pip3 install ${ACE_REPO}
+          pip3 install build
       - name: Build
         run: python3 -m build
 
@@ -31,16 +36,16 @@ jobs:
         python-version: ["3.10"]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install
+      - name: Prep
         run: |
-          pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
+          pip3 install ${ACE_REPO}
           pip3 install -e '.[test]'
       - name: Test
         run: python3 -m pytest -v --cov=camp tests
@@ -49,16 +54,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-      - name: Install
+      - name: Prep
         run: |
-          pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
+          pip3 install ${ACE_REPO}
           pip3 install -e '.[flake8]'
       - name: Run flake8
         run: |
