@@ -22,7 +22,7 @@ jobs:
       - name: Build
         run: python3 -m build
 
-  unit-test:
+  test:
     needs: [build]
     runs-on: ubuntu-latest
     strategy:
@@ -41,7 +41,7 @@ jobs:
       - name: Install
         run: |
           pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
-          pip3 install -e '.[unit-test]'
+          pip3 install -e '.[test]'
       - name: Test
         run: python3 -m pytest -v --cov=camp tests/unit_test
 
