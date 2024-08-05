@@ -84,8 +84,8 @@ jobs:
       - name: Prep DTNMA tools
         run: |
           git clone https://github.com/JHUAPL-DTNMA/dtnma-tools.git tests/integration_test/dtnma-tools
-          apt-get update
-          apt-get install -y rsync cmake ninja-build ruby build-essential autoconf libtool libssl-dev libcjson-dev
+          sudo apt-get update
+          sudo apt-get install -y rsync cmake ninja-build ruby build-essential autoconf libtool libssl-dev libcjson-dev
           cd tests/integration_test/dtnma-tools
           git submodule update --init --recursive
           ./prep.sh
