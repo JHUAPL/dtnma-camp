@@ -22,7 +22,7 @@ jobs:
       - name: Build
         run: python3 -m build
 
-  test:
+  unit-test:
     needs: [build]
     runs-on: ubuntu-latest
     strategy:
@@ -43,7 +43,7 @@ jobs:
           pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
           pip3 install -e '.[test]'
       - name: Test
-        run: python3 -m pytest -v --cov=camp tests
+        run: python3 -m pytest -v --cov=camp tests/unit_test
 
   flake8:
     runs-on: ubuntu-latest
