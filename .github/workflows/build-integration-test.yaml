@@ -52,7 +52,6 @@ jobs:
           sleep 15 # make sure docker container is up
           docker container ps -a
           echo "ANMS_IP_ADDR=$(docker exec anms-lib hostname -i)" >> $GITHUB_ENV
-          echo $ANMS_IP_ADDR
       - name: Test
         run: python3 -m pytest -v --cov=camp tests/integration_test/test_sql_integration.py
       - name: Stop
@@ -60,3 +59,36 @@ jobs:
         run: |
           docker stop anms-lib
           docker rm anms-lib
+
+  test-c:
+    needs: [build]
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ["3.10"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: |
+          pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
+          pip3 install -e '.[test]'
+          git clone https://github.com/JHUAPL-DTNMA/dtnma-adms.git tests/integration_test/anms-adms
+      - name: Prep DTNMA tools
+        run: |
+          git clone https://github.com/JHUAPL-DTNMA/dtnma-tools.git tests/integration_test/dtnma-tools
+          cd tests/integration_test/dtnma-tools
+          git submodule update --init --recursive
+          ./prep.sh
+          ./build.sh check
+          cd ../../..
+
+      - name: Test
+        run: python3 -m pytest -v --cov=camp tests/integration_test/test_c_integration.py
