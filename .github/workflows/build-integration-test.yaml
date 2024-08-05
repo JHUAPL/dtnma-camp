@@ -1,0 +1,49 @@
+name: Build and run integration tests
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ["3.10"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Prep
+        run: pip3 install build
+      - name: Build
+        run: python3 -m build
+
+
+  test-sql:
+    needs: [build]
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ["3.10"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: |
+          pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
+          pip3 install git+https://github.com/JHUAPL-DTNMA/dtnma-adms.git
+          pip3 install -e '.[test-sql]'
+      - name: Test
+        run: python3 -m pytest -v --cov=camp tests/integration_test/test_sql_integration.py
+
