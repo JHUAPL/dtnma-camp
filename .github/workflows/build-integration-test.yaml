@@ -50,6 +50,7 @@ jobs:
           docker build -t amp-sql:1.0 tests/integration_test/anms/amp-sql/ 
           docker run --name anms-lib -e POSTGRES_PASSWORD=root -d amp-sql:1.0
           sleep 15 # make sure docker container is up
+          docker container ps -a
           export ANMS_IP_ADDR=$(docker exec anms-lib hostname -i)
       - name: Test
         run: python3 -m pytest -v --cov=camp tests/integration_test/test_sql_integration.py
