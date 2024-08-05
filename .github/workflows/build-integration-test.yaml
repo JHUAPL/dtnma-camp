@@ -42,8 +42,10 @@ jobs:
       - name: Install
         run: |
           pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
-          pip3 install git+https://github.com/JHUAPL-DTNMA/dtnma-adms.git
           pip3 install -e '.[test-sql]'
+      - name: Prep Repos
+        run: |
+          git clone https://github.com/JHUAPL-DTNMA/dtnma-adms.git tests/integration_test/anms-adms
       - name: Test
         run: python3 -m pytest -v --cov=camp tests/integration_test/test_sql_integration.py
 
