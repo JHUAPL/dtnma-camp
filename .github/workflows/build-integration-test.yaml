@@ -52,6 +52,7 @@ jobs:
           sleep 15 # make sure docker container is up
           docker container ps -a
           export ANMS_IP_ADDR=$(docker exec anms-lib hostname -i)
+          echo $ANMS_IP_ADDR
       - name: Test
         run: python3 -m pytest -v --cov=camp tests/integration_test/test_sql_integration.py
       - name: Stop
