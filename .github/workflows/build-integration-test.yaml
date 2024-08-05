@@ -43,8 +43,17 @@ jobs:
         run: |
           pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
           pip3 install -e '.[test]'
-      - name: Prep Repos
-        run: |
           git clone https://github.com/JHUAPL-DTNMA/dtnma-adms.git tests/integration_test/anms-adms
+      - name: Prep docker
+        run: |
+          docker build -t amp-sql:1.0 ../amp-sql/ 
+          docker run --name anms-lib -e POSTGRES_PASSWORD=root -d amp-sql:1.0
+          sleep 15 # make sure docker container is up
+          export ANMS_IP_ADDR=$(docker exec anms-lib hostname -i)
       - name: Test
         run: python3 -m pytest -v --cov=camp tests/integration_test/test_sql_integration.py
+      - name: Stop
+        if: always()
+        run: |
+          docker stop anms-lib
+          docker rm anms-lib
