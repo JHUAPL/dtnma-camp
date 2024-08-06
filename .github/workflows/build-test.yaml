@@ -76,8 +76,7 @@ jobs:
       - name: Prep OS
         run: |
           apt-get update
-          apt-get install -y git postgresql-client-14 python3-pip
-          pip3 install --update pip
+          apt-get install -y git postgresql-client-14
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
@@ -94,8 +93,8 @@ jobs:
           psql -f Database_Scripts/Tables/amp_core_create_database.sql
       - name: Install
         run: |
-          pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
-          pip3 install -e '.[test]'
+          pip install git+https://github.com/NASA-AMMOS/anms-ace.git
+          pip install -e '.[test]'
 
   test-integration-c:
     needs: [build]
