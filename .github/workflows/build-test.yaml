@@ -56,7 +56,7 @@ jobs:
       postgres:
         image: postgres:14
         env:
-          POSTGRES_DB: postgres        
+          POSTGRES_DB: runner        
           POSTGRES_PASSWORD: postgres
           POSTGRES_USER: postgres          
         options: >-
@@ -83,7 +83,9 @@ jobs:
         run: |
           git clone https://github.com/NASA-AMMOS/anms.git tests/integration_test/anms          
           sleep 15
+          echo "HERE"
           psql -l
+          echo "DONE listing files"
           psql -d postgres -f tests/integration_test/anms/amp-sql/postgres/Database_Scripts/Tables/amp_core_create_database.sql
 
 
