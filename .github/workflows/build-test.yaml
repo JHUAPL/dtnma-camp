@@ -68,11 +68,16 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+    env:
+      PGHOST: postgres
+      PGDATABASE: runner
+      PGUSER: postgres
     steps:
       - name: Prep OS
         run: |
           apt-get update
-          apt-get install -y git postgresql-client-14
+          apt-get install -y git postgresql-client-14 python3-pip
+          pip3 install --update pip
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
@@ -85,9 +90,8 @@ jobs:
         run: |
           git clone https://github.com/NASA-AMMOS/anms.git tests/integration_test/anms
           cd tests/integration_test/anms/amp-sql/postgres
-          echo "postgres:*:runner:postgres:postgres" >.pgpass && chmod 0600 .pgpass
-          export PGPASSFILE=.pgpass
-          psql -h postgres -d runner -U postgres -f Database_Scripts/Tables/amp_core_create_database.sql
+          echo "postgres:*:runner:postgres:postgres" >~/.pgpass && chmod 0600 ~/.pgpass
+          psql -f Database_Scripts/Tables/amp_core_create_database.sql
       - name: Install
         run: |
           pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
