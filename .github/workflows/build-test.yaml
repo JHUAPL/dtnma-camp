@@ -85,7 +85,7 @@ jobs:
         run: |
           git clone https://github.com/NASA-AMMOS/anms.git tests/integration_test/anms
           cd tests/integration_test/anms/amp-sql/postgres
-          echo "postgres:*:runner:postgres:postgres" >.pgpass
+          echo "postgres:*:runner:postgres:postgres" >.pgpass && chmod 0600 .pgpass
           export PGPASSFILE=.pgpass
           psql -h postgres -d runner -U postgres -f Database_Scripts/Tables/amp_core_create_database.sql
       - name: Install
