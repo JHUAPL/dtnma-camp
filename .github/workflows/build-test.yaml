@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       max-parallel: 4
       matrix:
@@ -24,7 +24,7 @@ jobs:
 
   unit-test:
     needs: [build]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       max-parallel: 4
       matrix:
@@ -47,25 +47,26 @@ jobs:
 
   test-integration-sql:
     needs: [build]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    # Job executes within a container
+    container: ubuntu:22.04
     strategy:
       max-parallel: 4
       matrix:
         python-version: ["3.10"]
+
     services:
       postgres:
         image: postgres:14
         env:
-          POSTGRES_DB: runner        
+          POSTGRES_DB: runner
+          POSTGRES_USER: postgres      
           POSTGRES_PASSWORD: postgres
-          POSTGRES_USER: postgres          
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        ports:
-          - 5432:5432
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -75,24 +76,20 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Prep ANMS database
+        run: |
+          git clone https://github.com/NASA-AMMOS/anms.git tests/integration_test/anms
+          cd tests/integration_test/anms/amp-sql/postgres
+          echo "postgres:*:runner:postgres:postgres" >$HOME/.pgpass
+          psql -h postgres -d runner -f Database_Scripts/Tables/amp_core_create_database.sql
       - name: Install
         run: |
           pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
           pip3 install -e '.[test]'
-      - name: Prep ANMS database
-        run: |
-          git clone https://github.com/NASA-AMMOS/anms.git tests/integration_test/anms          
-          sleep 15
-          echo "HERE"
-          psql -l
-          echo "DONE listing files"
-          psql -d postgres -f tests/integration_test/anms/amp-sql/postgres/Database_Scripts/Tables/amp_core_create_database.sql
-
-
 
   test-integration-c:
     needs: [build]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       max-parallel: 4
       matrix:
