@@ -48,10 +48,7 @@ jobs:
   test-integration-sql:
     needs: [build]
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: ["3.10"]
+    container: ubuntu:20.04
     services:
       postgres:
         image: postgres
@@ -82,7 +79,10 @@ jobs:
   test-integration-c:
     needs: [build]
     runs-on: ubuntu-latest
-    container: ubuntu:20.04
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ["3.10"]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
