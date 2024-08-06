@@ -72,7 +72,7 @@ jobs:
       - name: Prep OS
         run: |
           apt-get update
-          apt-get install -y git postgres-client-14
+          apt-get install -y git postgresql-client-14
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
