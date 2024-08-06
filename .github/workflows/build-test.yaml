@@ -82,10 +82,7 @@ jobs:
   test-integration-c:
     needs: [build]
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: ["3.10"]
+    container: ubuntu:20.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
