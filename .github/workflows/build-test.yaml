@@ -72,6 +72,7 @@ jobs:
       PGHOST: postgres
       PGDATABASE: runner
       PGUSER: postgres
+      PGPASSWORD: postgres
     steps:
       - name: Prep OS
         run: |
@@ -89,7 +90,6 @@ jobs:
         run: |
           git clone https://github.com/NASA-AMMOS/anms.git tests/integration_test/anms
           cd tests/integration_test/anms/amp-sql/postgres
-          echo "postgres:*:runner:postgres:postgres" >~/.pgpass && chmod 0600 ~/.pgpass
           psql -f Database_Scripts/Tables/amp_core_create_database.sql
       - name: Install
         run: |
