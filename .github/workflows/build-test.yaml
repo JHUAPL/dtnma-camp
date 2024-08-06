@@ -45,7 +45,7 @@ jobs:
       - name: Test
         run: python3 -m pytest -v --cov=camp tests/unit_test
 
-  test-sql:
+  test-integration-sql:
     needs: [build]
     runs-on: ubuntu-latest
     strategy:
@@ -82,7 +82,7 @@ jobs:
           docker stop anms-lib
           docker rm anms-lib
 
-  test-c:
+  test-integration-c:
     needs: [build]
     runs-on: ubuntu-latest
     strategy:
