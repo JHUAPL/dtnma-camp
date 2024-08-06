@@ -56,7 +56,9 @@ jobs:
       postgres:
         image: postgres:14
         env:
+          POSTGRES_DB: postgres        
           POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres          
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -80,6 +82,7 @@ jobs:
       - name: Prep ANMS database
         run: |
           git clone https://github.com/NASA-AMMOS/anms.git tests/integration_test/anms          
+          sleep 15
           psql -l
           psql -d postgres -f tests/integration_test/anms/amp-sql/postgres/Database_Scripts/Tables/amp_core_create_database.sql
 
