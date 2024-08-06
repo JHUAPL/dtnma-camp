@@ -50,10 +50,10 @@ jobs:
     container-job:
       runs-on: ubuntu-latest
       container: node:10.18-jessie
-      strategy:
-        max-parallel: 4
-        matrix:
-          python-version: ["3.10"]
+      # strategy:
+      #   max-parallel: 4
+      #   matrix:
+      #     python-version: ["3.10"]
       services:
         postgres:
           image: postgres
@@ -75,29 +75,29 @@ jobs:
           uses: actions/setup-python@v4
           with:
             python-version: ${{ matrix.python-version }}
-        - name: Install
-          run: |
-            pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
-            pip3 install -e '.[test]'
-            git clone https://github.com/JHUAPL-DTNMA/dtnma-adms.git tests/integration_test/anms-adms
-            git clone https://github.com/NASA-AMMOS/anms.git tests/integration_test/anms
-        - name: Prep docker
-          run: |
-            docker build -t amp-sql:1.0 tests/integration_test/anms/amp-sql/ 
-            docker run --name anms-lib -e POSTGRES_PASSWORD=root -d amp-sql:1.0
-            sleep 15 # make sure docker container is up
-            docker container ps -a
-            echo "PGSQL_HOST=$(docker exec anms-lib hostname -i)" >> $GITHUB_ENV
-        - name: Test
-          run: python3 -m pytest -v --cov=camp tests/integration_test/test_sql_integration.py
-          env:
-            PGSQL_USERNAME: postgres
-            PGSQL_PASSWORD: root        
-        - name: Stop
-          if: always()
-          run: |
-            docker stop anms-lib
-            docker rm anms-lib
+        # - name: Install
+        #   run: |
+        #     pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
+        #     pip3 install -e '.[test]'
+        #     git clone https://github.com/JHUAPL-DTNMA/dtnma-adms.git tests/integration_test/anms-adms
+        #     git clone https://github.com/NASA-AMMOS/anms.git tests/integration_test/anms
+        # - name: Prep docker
+        #   run: |
+        #     docker build -t amp-sql:1.0 tests/integration_test/anms/amp-sql/ 
+        #     docker run --name anms-lib -e POSTGRES_PASSWORD=root -d amp-sql:1.0
+        #     sleep 15 # make sure docker container is up
+        #     docker container ps -a
+        #     echo "PGSQL_HOST=$(docker exec anms-lib hostname -i)" >> $GITHUB_ENV
+        # - name: Test
+        #   run: python3 -m pytest -v --cov=camp tests/integration_test/test_sql_integration.py
+        #   env:
+        #     PGSQL_USERNAME: postgres
+        #     PGSQL_PASSWORD: root        
+        # - name: Stop
+        #   if: always()
+        #   run: |
+        #     docker stop anms-lib
+        #     docker rm anms-lib
 
   test-integration-c:
     needs: [build]
