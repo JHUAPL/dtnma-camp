@@ -48,7 +48,10 @@ jobs:
   test-integration-sql:
     needs: [build]
     runs-on: ubuntu-latest
-    container: node:10.18-jessie
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ["3.10"]
     services:
       postgres:
         image: postgres
