@@ -48,10 +48,13 @@ jobs:
   test-integration-sql:
     needs: [build]
     runs-on: ubuntu-latest
-    container: ubuntu:20.04
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ["3.10"]
     services:
       postgres:
-        image: postgres
+        image: postgres:14
         env:
           POSTGRES_PASSWORD: postgres
         options: >-
@@ -74,6 +77,8 @@ jobs:
         run: |
           pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
           pip3 install -e '.[test]'
+      - name: Prep ANMS database
+        run: psql --help
 
 
   test-integration-c:
