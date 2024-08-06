@@ -47,21 +47,20 @@ jobs:
 
   test-integration-sql:
     needs: [build]
-    container-job:
-      runs-on: ubuntu-latest
-      container: node:10.18-jessie
-      services:
-        postgres:
-          image: postgres
-          env:
-            POSTGRES_PASSWORD: postgres
-          options: >-
-            --health-cmd pg_isready
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
-          ports:
-            - 5432:5432
+    runs-on: ubuntu-latest
+    container: node:10.18-jessie
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
   test-integration-c:
     needs: [build]
