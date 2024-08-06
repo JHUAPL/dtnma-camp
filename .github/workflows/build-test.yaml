@@ -78,7 +78,11 @@ jobs:
           pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
           pip3 install -e '.[test]'
       - name: Prep ANMS database
-        run: psql --help
+        run: |
+          git clone https://github.com/NASA-AMMOS/anms.git tests/integration_test/anms          
+          psql -l
+          psql -d postgres -f tests/integration_test/anms/amp-sql/postgres/Database_Scripts/Tables/amp_core_create_database.sql
+
 
 
   test-integration-c:
