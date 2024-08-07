@@ -93,6 +93,7 @@ jobs:
         run: |
           pip3 install ${ACE_REPO}
           pip install -e '.[test]'
+          git clone git@github.com:JHUAPL-DTNMA/dtnma-adms.git tests/integration_test/anms-adms
       - name: Test
         run: python3 -m pytest -v --cov=camp tests/integration_test/test_sql_integration.py
 
