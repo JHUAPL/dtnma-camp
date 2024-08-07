@@ -109,7 +109,7 @@ jobs:
           psql -f Database_Scripts/Routines/all_routines.sql
           psql -f Database_Scripts/Tables/healthcheck_roles.sql
           psql -f Database_Scripts/amp_core_functions.sql
-        - name: Install
+      - name: Install
         run: |
           pip3 install ${ACE_REPO}
           pip install -e '.[test]'
