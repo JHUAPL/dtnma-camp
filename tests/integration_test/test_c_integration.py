@@ -22,7 +22,6 @@ def setup():
 def test_adms(adm):
     """
     Compiles each adm in ADMS_DIR against the dtnma-tools repo
-    Skips files in the dtnma-tools repo's src/ion_if/bpv7 directory
     @pre: DTNMA_TOOLS_DIR is a git working copy, tests should be run from home directory of camp repo
     """
 
