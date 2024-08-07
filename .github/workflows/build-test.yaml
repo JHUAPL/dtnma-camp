@@ -139,9 +139,6 @@ jobs:
           pip3 install -e '.[test]'
       - name: Prep repos
         run: |
-          ls tests/integration_test
-          rm -rf tests/integration_test/anms-adms
-          rm -rf tests/integration_test/dtnma-tools
           git clone https://github.com/JHUAPL-DTNMA/dtnma-adms.git tests/integration_test/anms-adms
           git clone https://github.com/JHUAPL-DTNMA/dtnma-tools.git tests/integration_test/dtnma-tools
           sudo apt-get update
