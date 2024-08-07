@@ -139,12 +139,13 @@ jobs:
           pip3 install -e '.[test]'
       - name: Prep repos
         run: |
+          ls tests/integration_test
           rm -rf tests/integration_test/anms-adms
           rm -rf tests/integration_test/dtnma-tools
           git clone https://github.com/JHUAPL-DTNMA/dtnma-adms.git tests/integration_test/anms-adms
           git clone https://github.com/JHUAPL-DTNMA/dtnma-tools.git tests/integration_test/dtnma-tools
           sudo apt-get update
-          sudo apt-get install -y rsync cmake ninja-build ruby build-essential autoconf libtool civetweb libcivetweb-dev libssl-dev libcjson-dev          
+          sudo apt-get install -y cmake ninja-build ruby build-essential autoconf libtool civetweb libcivetweb-dev libssl-dev libcjson-dev          
           cd tests/integration_test/dtnma-tools
           git submodule update --init --recursive
           ./prep.sh
