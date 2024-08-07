@@ -17,7 +17,6 @@ def setup():
     @pre: DTNMA_TOOLS_DIR is a git working copy
     """
     subprocess.check_call(["git", "restore", "."], cwd=DTNMA_TOOLS_DIR)
-    sleep(3)
     
 
 @pytest.mark.parametrize("adm", [f for f in os.listdir(ADMS_DIR) if os.path.isfile(os.path.join(ADMS_DIR, f))])

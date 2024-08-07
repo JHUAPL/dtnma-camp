@@ -137,9 +137,11 @@ jobs:
         run: |
           pip3 install ${ACE_REPO}
           pip3 install -e '.[test]'
-          git clone https://github.com/JHUAPL-DTNMA/dtnma-adms.git tests/integration_test/anms-adms
-      - name: Prep DTNMA tools
+      - name: Prep repos
         run: |
+          rm -rf tests/integration_test/anms-adms
+          rm -rf tests/integration_test/dtnma-tools
+          git clone https://github.com/JHUAPL-DTNMA/dtnma-adms.git tests/integration_test/anms-adms
           git clone https://github.com/JHUAPL-DTNMA/dtnma-tools.git tests/integration_test/dtnma-tools
           sudo apt-get update
           sudo apt-get install -y rsync cmake ninja-build ruby build-essential autoconf libtool libssl-dev libcjson-dev
