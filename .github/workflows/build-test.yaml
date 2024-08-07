@@ -171,7 +171,7 @@ jobs:
           flake8 src || FAIL_SRC=$?
 
   release:
-    needs: [unit-test, flake8]
+    needs: [unit-test, test-integration-c, test-integration-sql, flake8]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     environment: release
