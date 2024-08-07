@@ -9,7 +9,7 @@ build:
     python: "3.10"
   jobs:
     pre_install:
-      - pip install git+https://github.com/NASA-AMMOS/anms-ace.git
+      - pip install git+https://github.com/JHUAPL-DTNMA/dtnma-ace.git
     pre_build:
       - ./build_docs.sh
 
