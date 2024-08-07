@@ -91,8 +91,10 @@ jobs:
           psql -f Database_Scripts/Tables/amp_core_create_database.sql
       - name: Install
         run: |
-          pip install git+https://github.com/NASA-AMMOS/anms-ace.git
+          pip3 install ${ACE_REPO}
           pip install -e '.[test]'
+      - name: Test
+        run: python3 -m pytest -v --cov=camp tests/integration_test/test_sql_integration.py
 
   test-integration-c:
     needs: [build]
@@ -112,7 +114,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install
         run: |
-          pip3 install git+https://github.com/NASA-AMMOS/anms-ace.git
+          pip3 install ${ACE_REPO}
           pip3 install -e '.[test]'
           git clone https://github.com/JHUAPL-DTNMA/dtnma-adms.git tests/integration_test/anms-adms
       - name: Prep DTNMA tools
