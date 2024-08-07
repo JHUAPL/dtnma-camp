@@ -34,8 +34,10 @@ def test_adms(adm):
 
     filepath = os.path.join(ADMS_DIR, adm)  # input file full filepath
 
-    # if camp-generated files already exist, find where they are is so we know to scrap from and output to
-    # agent files (agent.c, impl.c, impl.h) in the same directory, the impl files get scraped
+    # if camp-generated files already exist, find where they are is so we can scrape if possible
+    # assumes the impl.c and the impl.h files (which get scraped) live in the same directory.
+    # also must be under folder named /agent for camp to correctly scrape, otherwise it
+    # generates a new file
     norm_name = ADM_SET.load_from_file(filepath).norm_name
     impl = "adm_{name}_impl.c".format(name=norm_name)
     outdir = _find_dir(impl, OUT_DIR)
@@ -44,12 +46,17 @@ def test_adms(adm):
     exitcode = _run_camp(filepath, outdir, only_sql=False, only_ch=True, scrape=True)
     assert 0 == exitcode
 
-    # may need to move the mgr or shared files
-    # okay to directly move bc these files don't get scraped
+    # may need to move files around anyway
     mgr = os.path.join(outdir, "mgr", "adm_{name}_mgr.c".format(name=norm_name))
     shared = os.path.join(outdir, "shared", "adm", "adm_{name}.h".format(name=norm_name))
+    agent = os.path.join(outdir, "agent", "adm_{name}_agent.c".format(name=norm_name))
+    impl_c = os.path.join(outdir, "agent", "adm_{name}_impl.c".format(name=norm_name))
+    impl_h = os.path.join(outdir, "agent", "adm_{name}_impl.h".format(name=norm_name))
     _move_file(mgr, OUT_DIR)
     _move_file(shared, OUT_DIR)
+    _move_file(agent, OUT_DIR)
+    _move_file(impl_c, OUT_DIR)
+    _move_file(impl_h, OUT_DIR)
 
     # compile here
     assert 0 == subprocess.call(["./build.sh", "check"], cwd=DTNMA_TOOLS_DIR)
