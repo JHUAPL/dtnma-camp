@@ -169,9 +169,9 @@ integration-test-sql:
     - docker run --name anms-lib -e POSTGRES_PASSWORD=root -d amp-sql:1.0
     - sleep 15 # make sure docker container is up
     - docker container ps -a
-    - export PGSQL_HOST=$(docker exec anms-lib hostname -i)
-    - export PGSQL_USERNAME="postgres"
-    - export PGSQL_PASSWORD="root"
+    - export PGHOST=$(docker exec anms-lib hostname -i)
+    - export PGUSER="postgres"
+    - export PGPASSWORD="root"
   script:
     - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_sql_integration.py
     - coverage xml

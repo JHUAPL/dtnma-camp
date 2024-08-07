@@ -10,7 +10,7 @@ from .util import _run_camp, ADMS_DIR
 def setup():
     """
     Connects to the ADMS library session. Cleans up connections once done.
-    @pre: IP Address of the library session should be stored in env var $PGSQL_HOST,
+    @pre: IP Address of the library session should be stored in env var $PGHOST,
           username and password should be stored in env vars $PGSQL_USERNAME and
           $PGSQL_PASSWORD, respectively
     @yields tuple of (connection object, AdmSet())
@@ -18,10 +18,10 @@ def setup():
 
     # setup: connect to ANMS library
     conn = psycopg2.connect(
-            host=os.environ["PGSQL_HOST"],
+            host=os.environ["PGHOST"],
             port=5432,
-            user=os.environ["PGSQL_USERNAME"],
-            password=os.environ["PGSQL_PASSWORD"]
+            user=os.environ["PGUSER"],
+            password=os.environ["PGPASSWORD"]
     )
     cursor = conn.cursor()
     
