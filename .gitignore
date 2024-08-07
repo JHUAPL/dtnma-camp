@@ -8,9 +8,15 @@ __pycache__
 requirements.txt
 build
 dist
+.venv*/
+
+# Tool outputs
+agent/
+amp-sql/
+mgr/
+shared/
 
 # Test outputs
 testresults.xml
 .coverage
 coverage.xml
-tests/adms/

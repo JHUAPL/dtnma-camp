@@ -65,12 +65,54 @@ cache:
   update-ca-certificates
 
 .prep-install-pip: &prep-install-pip |
-    apt-get update && apt-get install -y git python3 python3-venv python3-pip python3-wheel
-    pip3 config --global set global.index-url https://artifactory.jhuapl.edu/artifactory/api/pypi/python-remote/simple
-    pip3 install pip-tools
+  apt-get update && apt-get install -y git python3 python3-venv python3-pip python3-wheel
+  pip3 config --global set global.index-url https://artifactory.jhuapl.edu/artifactory/api/pypi/python-remote/simple
+  pip3 install pip-tools
+
 .prep-wheel-ace: &prep-wheel-ace |
-    pip3 wheel git+https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/dtn/ace.git -w ./wheels --no-deps
-    git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/dtn/adms.git tests/adms
+  pip3 wheel git+https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/dtn/ace.git -w ./wheels --no-deps
+  git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/dtn/adms.git tests/adms
+
+.prep-install-docker: &prep-install-docker |
+  apt-get update -y
+  apt-get install -y ca-certificates curl
+  install -m 0755 -d /etc/apt/keyrings
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  chmod a+r /etc/apt/keyrings/docker.asc
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    tee /etc/apt/sources.list.d/docker.list > /dev/null
+  apt-get update
+  apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  docker info
+
+.prep-install-adms: &prep-install-adms |
+  git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/anms-adms.git tests/integration_test/anms-adms
+  cd tests/integration_test/anms-adms && git checkout apl-ep2-updates && cd ../../.. # change ADMs branch
+
+.prep-openssl-git-build: &prep-openssl-git-build |
+  # based on https://aplprod.servicenowservices.com/sp?id=kb_article&sys_id=797a2dcc1bdab994bcc3631dac4bcbbe
+  apt-get install -y wget
+  wget https://apllinuxdepot.jhuapl.edu/linux/GIT-Openssl/git-2.28.0-20.04.tar
+  tar -xvf git-2.28.0-20.04.tar
+  dpkg -i git-2.28.0-20.04/git-man*.deb
+  dpkg -i git-2.28.0-20.04/git_*.deb
+  apt-mark hold git
+  apt-mark hold git-man
+
+.prep-install-dtnma-tools: &prep-install-dtnma-tools |
+  # installs and compiles the dtnma-tools repo
+  # prep-openssl-git-build needs to run first for this to work
+  git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jhuapl.edu/anms/dtnma-tools.git tests/integration_test/dtnma-tools
+  apt-get update
+  apt-get install -y rsync cmake ninja-build ruby build-essential autoconf libtool libssl-dev libcjson-dev
+  cd tests/integration_test/dtnma-tools
+  git checkout apl-ep2-updates
+  git submodule update --init --recursive
+  ./prep.sh
+  ./build.sh check
+  cd ../../..
 
 build:
   stage: build
@@ -97,7 +139,7 @@ unit-test:
     - pip-compile --find-links ./wheels --extra test pyproject.toml
     - pip3 install --find-links ./wheels -r requirements.txt
   script:
-    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests
+    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/unit_test/
     - coverage xml
   coverage: /TOTAL\s+\d+\s+\d+\s+(\d+(?:.\d+)?)%/
   artifacts:
@@ -107,6 +149,54 @@ unit-test:
       coverage_report:
         coverage_format: cobertura
         path: coverage.xml
+
+integration-test-sql:
+  stage: test
+  needs:
+    - build
+  allow_failure: true
+  before_script:
+    - *prep-repos
+    - *prep-install-ca
+    - *prep-install-pip
+    - *prep-wheel-ace
+    - *prep-install-adms
+    - apt-get install -y postgresql # need for psycogp2 requirement
+    - pip-compile --find-links ./wheels --extra test pyproject.toml
+    - pip3 install --find-links ./wheels -r requirements.txt
+    - *prep-install-docker
+    - docker build -t amp-sql:1.0 ../amp-sql/ # TODO prob on main branch... is this okay?
+    - docker run --name anms-lib -e POSTGRES_PASSWORD=root -d amp-sql:1.0
+    - sleep 15 # make sure docker container is up
+    - docker container ps -a
+    - export PGHOST=$(docker exec anms-lib hostname -i)
+    - export PGUSER="postgres"
+    - export PGPASSWORD="root"
+  script:
+    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_sql_integration.py
+    - coverage xml
+  after_script:
+    - docker stop anms-lib
+    - docker rm anms-lib
+
+integration-test-c:
+  stage: test
+  needs:
+    - build
+  allow_failure: true
+  before_script:
+    - *prep-repos
+    - *prep-install-ca
+    - *prep-install-pip
+    - *prep-wheel-ace
+    - *prep-install-adms
+    - pip-compile --find-links ./wheels --extra test pyproject.toml
+    - pip3 install --find-links ./wheels -r requirements.txt
+    - *prep-openssl-git-build
+    - *prep-install-dtnma-tools
+  script:
+    - PYTHONPATH=src python3 -m pytest --verbose --junitxml=testresults.xml --cov=camp tests/integration_test/test_c_integration.py
+    - coverage xml
 
 pylint:
   stage: test

@@ -1,4 +1,4 @@
-name: Build and run unit tests
+name: Build and run tests
 on: [push]
 
 env:
@@ -6,7 +6,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       max-parallel: 4
       matrix:
@@ -27,9 +27,9 @@ jobs:
       - name: Build
         run: python3 -m build
 
-  test:
+  unit-test:
     needs: [build]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       max-parallel: 4
       matrix:
@@ -48,7 +48,107 @@ jobs:
           pip3 install ${ACE_REPO}
           pip3 install -e '.[test]'
       - name: Test
-        run: python3 -m pytest -v --cov=camp tests
+        run: python3 -m pytest -v --cov=camp tests/unit_test
+
+  test-integration-sql:
+    needs: [build]
+    runs-on: ubuntu-22.04
+    # Job executes within a container
+    container: ubuntu:22.04
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_DB: runner
+          POSTGRES_USER: postgres      
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      PGHOST: postgres
+      PGDATABASE: runner
+      PGUSER: postgres
+      PGPASSWORD: postgres
+    steps:
+      - name: Prep Container OS
+        run: |
+          apt-get update
+          apt-get install -y git postgresql-client-14 python3-pip
+          pip3 install --upgrade pip
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Prep ANMS database
+        run: |
+          git clone https://github.com/NASA-AMMOS/anms.git tests/integration_test/anms
+          cd tests/integration_test/anms/amp-sql/postgres
+          psql -f Database_Scripts/Tables/amp_core_create_database.sql
+          psql -f Database_Scripts/Tables/transcoder.sql
+          psql -f Database_Scripts/Tables/adm_data.sql
+          psql -f Database_Scripts/Views/obj_view.sql
+          psql -f Database_Scripts/Views/ari_view.sql
+          psql -f Database_Scripts/Views/ctrl_view.sql
+          psql -f Database_Scripts/Views/edd_view.sql
+          psql -f Database_Scripts/Views/mac_view.sql
+          psql -f Database_Scripts/Views/oper_view.sql
+          psql -f Database_Scripts/Views/message_view.sql
+          psql -f Database_Scripts/Views/rpt_view.sql
+          psql -f Database_Scripts/Views/sbr_view.sql
+          psql -f Database_Scripts/Views/tbr_view.sql
+          psql -f Database_Scripts/Views/tblt_view.sql
+          psql -f Database_Scripts/Views/tnvc_view.sql
+          psql -f Database_Scripts/Views/parm_view.sql
+          psql -f Database_Scripts/Views/var_view.sql
+          psql -f Database_Scripts/Views/namespace_view.sql
+          psql -f Database_Scripts/Routines/all_routines.sql
+          psql -f Database_Scripts/Tables/healthcheck_roles.sql
+          psql -f Database_Scripts/amp_core_functions.sql
+      - name: Install
+        run: |
+          pip3 install ${ACE_REPO}
+          pip install -e '.[test]'
+          git clone https://github.com/JHUAPL-DTNMA/dtnma-adms.git tests/integration_test/anms-adms
+      - name: Test
+        run: python3 -m pytest -v --cov=camp tests/integration_test/test_sql_integration.py
+
+  test-integration-c:
+    needs: [build]
+    runs-on: ubuntu-22.04
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ["3.10"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: |
+          pip3 install ${ACE_REPO}
+          pip3 install -e '.[test]'
+      - name: Prep repos
+        run: |
+          git clone https://github.com/JHUAPL-DTNMA/dtnma-adms.git tests/integration_test/anms-adms
+          git clone https://github.com/JHUAPL-DTNMA/dtnma-tools.git tests/integration_test/dtnma-tools
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build ruby build-essential autoconf libtool civetweb libcivetweb-dev libssl-dev libcjson-dev          
+          cd tests/integration_test/dtnma-tools
+          git submodule update --init --recursive
+          ./prep.sh
+          ./build.sh check
+      - name: Test
+        run: python3 -m pytest -v --cov=camp tests/integration_test/test_c_integration.py
 
   flake8:
     runs-on: ubuntu-latest
@@ -71,7 +171,7 @@ jobs:
           flake8 src || FAIL_SRC=$?
 
   release:
-    needs: [test, flake8]
+    needs: [unit-test, test-integration-c, test-integration-sql, flake8]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     environment: release
