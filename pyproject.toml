@@ -3,12 +3,12 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "anms-CAmp"
+name = "dtnma-camp"
 version = "2.0.0"
 authors = [
   { name="JHU/APL", email="dtnma-support@jhuapl.edu" },
 ]
-description = "C code generator for the Asychronous Management Protocol"
+description = "C code generator for DTNMA tools"
 readme = "README.md"
 license = { text="Apache-2.0" }
 requires-python = ">=3.7"
@@ -20,7 +20,7 @@ classifiers = [
 ]
 
 dependencies = [
-  "anms-ace",
+  "dtnma-ace",
   "cbor2",
   "configobj",
   "xdg",
@@ -64,5 +64,5 @@ max-line-length=100
 camp = "camp.tools.camp:main"
 
 [project.urls]
-"Homepage" = "https://github.com/NASA-AMMOS/anms-camp"
-"Bug Tracker" = "https://github.com/NASA-AMMOS/anms-camp/issues"
+"Homepage" = "https://github.com/JHUAPL-DTNMA/dtnma-camp"
+"Bug Tracker" = "https://github.com/JHUAPL-DTNMA/dtnma-camp/issues"
