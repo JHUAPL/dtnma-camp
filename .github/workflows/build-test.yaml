@@ -147,7 +147,6 @@ jobs:
           git submodule update --init --recursive
           ./prep.sh
           ./build.sh check
-          cd ../../..
       - name: Test
         run: python3 -m pytest -v --cov=camp tests/integration_test/test_c_integration.py
 
