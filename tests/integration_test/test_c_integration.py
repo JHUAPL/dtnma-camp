@@ -5,6 +5,7 @@ import shutil
 import subprocess
 
 from .util import _run_camp, ADMS_DIR, DTNMA_TOOLS_DIR
+from time import sleep
 
 OUT_DIR = os.path.join(DTNMA_TOOLS_DIR, "src")
 ADM_SET = ace.AdmSet()
@@ -16,7 +17,8 @@ def setup():
     @pre: DTNMA_TOOLS_DIR is a git working copy
     """
     subprocess.check_call(["git", "restore", "."], cwd=DTNMA_TOOLS_DIR)
-
+    sleep(3)
+    
 
 @pytest.mark.parametrize("adm", [f for f in os.listdir(ADMS_DIR) if os.path.isfile(os.path.join(ADMS_DIR, f))])
 def test_adms(adm):
