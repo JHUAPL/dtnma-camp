@@ -57,7 +57,5 @@ def test_adms(setup, adm):
     norm_name = admset.load_from_file(filepath).norm_name
     sql_file = os.path.join(ADMS_DIR, "amp-sql", "Agent_Scripts", 'adm_{name}.sql'.format(name=norm_name))
     with open(sql_file, "r") as f:
-        try:
-            cursor.execute(f.read())
-        except:
-            cursor.execute("rollback")
+        cursor.execute(f.read())
+        cursor.execute("rollback")
